@@ -1,0 +1,52 @@
+:host {
+	display: block;
+}
+
+.projects-panel {
+	&__msg {
+		text-align: center;
+		margin: 56px 0;
+	}
+}
+
+.projects-list {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+	padding: 45px 0 0;
+}
+
+.mat-spinner {
+	height: 40px;
+	width: 40px;
+	margin: 45px auto;
+}
+
+a-project-thumb {
+	width: 25%;
+	padding: 0 10px 20px;
+}
+
+.btn-add-project {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+}
+
+@media only screen and (max-width: 960px) {
+	a-project-thumb {
+		width: 33.3333%;
+	}
+}
+
+@media only screen and (max-width: 640px) {
+	a-project-thumb {
+		width: 50%;
+	}
+}
+
+@media only screen and (max-width: 480px) {
+	a-project-thumb {
+		width: 100%;
+	}
+}

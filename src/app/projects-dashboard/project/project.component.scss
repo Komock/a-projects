@@ -1,0 +1,87 @@
+.modal {
+	&--project {
+		display: block;
+	}
+	&__content {
+		padding-top: 15px;
+	}
+	&__wrap {
+		max-width: 1000px;
+	}
+}
+
+.mat-spinner {
+	width: 40px;
+	height: 100px;
+	margin: 45px auto;
+}
+
+.close {
+	position: absolute;
+	top: 24px;
+	right: 24px;
+}
+
+.project {
+	&__cols {
+		display: flex;
+		flex-flow: row wrap;
+		justify-content: space-between;
+	}
+	&__col {
+		width: calc(50% - 20px);
+	}
+	&__tool-bar {
+		display: flex;
+		justify-content: flex-end;
+		min-height: auto;
+		padding: 0;
+		margin-bottom: 24px;
+	}
+	&__menu-btn {
+		opacity: 0.3;
+		transition: .3s;
+		&:hover {
+			opacity: 1;
+		}
+	}
+	&__task-list {
+		margin-top: 16px;
+	}
+	&__btn-add-task {
+		width: 100%;
+	}
+}
+
+a-task {
+	margin-top: 8px;
+	&:first-child {
+		margin-top: 0;
+	}
+}
+
+.no-tasks {
+	text-align: center;
+	color: #999;
+}
+
+.mat-menu-item {
+	font-size: 14px;
+	line-height: 30px;
+	height: 30px;
+	.mat-icon {
+		font-size: 20px;
+		margin-right: 4px;
+	}
+}
+
+@media only screen and (max-width: 960px) {
+	.project {
+		&__cols {
+			flex-flow: column no-wrap;
+		}
+		&__col {
+			width: 100%;
+		}
+	}
+}

@@ -1,0 +1,52 @@
+:host {
+	display: block;
+}
+
+.tasks-list {
+	margin: 24px 0;
+}
+
+.mat-input-container {
+	width: 100%;
+}
+
+.thumb {
+	width: 50%;
+	padding: 0 15px;
+	&__placeholder {
+		height: 240px;
+		border: 1px dashed #ddd;
+		background-size: cover;
+		background-position: center center;
+	}
+	&__input-wrap {
+		position: relative;
+	}
+	&__input {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		right: 0;
+		opacity: 0;
+		width: 100%;
+		display: block;
+		z-index: 10;
+	}
+	&__txt {
+		position: absolute;
+		bottom: 40px;
+		left: 0;
+		right: 0;
+		color: lighten(#673ab7, 26%);
+		text-align: center;
+		padding: 0 20px;
+		z-index: 1;
+	}
+	&__progress {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		right: 0;
+	}
+}

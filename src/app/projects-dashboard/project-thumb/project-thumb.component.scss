@@ -1,0 +1,42 @@
+md-card {
+	position: relative;
+	& > a {
+		display: block;
+	}
+}
+
+.btn-more {
+	position: absolute;
+	left: 5px;
+	top: 5px;
+	color: #fff;
+}
+
+.mat-card-image {
+	margin-top: -24px;
+}
+
+a {
+	color: #000;
+	text-decoration: none;
+}
+
+.thumb {
+	&__link {
+		display: block;
+	}
+	&__placeholder {
+		height: 200px;
+		margin: -24px -24px 0;
+	}
+	&__title {
+		margin: 0;
+	}
+	&__description {
+		margin: 12px 0 0;
+	}
+}
+
+md-card-content {
+	margin-bottom: 0;
+}

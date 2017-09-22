@@ -1,0 +1,21 @@
+<div class="content">
+	<div class="wrap">
+		<div class="signup__inner">
+			<h2 class="form__title">Get started absolutely free</h2>
+			<form class="form form--signup" (ngSubmit)="onSubmit($event)" #signupForm="ngForm">
+				<div class="form__msg" [hidden]="!formMsg">{{formMsg}}</div>
+				<md-input-container class="form__input">
+					<input mdInput placeholder="E-mail" name="email" type="email" minlength="5" required [(ngModel)]="model.email">
+				</md-input-container>
+				<md-input-container class="form__input">
+					<input mdInput placeholder="Password" name="password" type="password" minlength="4" required [(ngModel)]="model.password">
+				</md-input-container>
+				<button md-raised-button class="form__submit" type="submit" color="accent" [disabled]="!signupForm.form.valid">Continue</button>
+			</form>
+			<div class="signup__w-services">
+				<p>or sign up with</p>
+				<button md-raised-button class="signup__btn signup__btn--google" color="warn" (click)="signupByGoogle()">Google</button>
+			</div>
+		</div>
+	</div>
+</div>

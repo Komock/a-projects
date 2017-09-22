@@ -1,0 +1,31 @@
+:host {
+	display: block;
+	background: #f5f5f5;
+	padding: 10px 30px;
+}
+
+.form {
+	&--add-participants {
+		display: flex;
+		flex: 0 50px;
+		align-items: center;
+	}
+	.mat-input-container {
+		width: 100%;
+	}
+	&__submit {
+		margin-left: 20px;
+		margin-top: 0;
+		width: 50px;
+	}
+}
+
+.participants-list {
+	display: block
+}
+
+.mat-list .mat-list-avatar {
+	width: 30px;
+	height: 30px;
+	margin-right: 15px;
+}

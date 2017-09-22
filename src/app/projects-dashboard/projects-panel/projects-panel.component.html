@@ -1,0 +1,28 @@
+<div class="content">
+	<div class="wrap">
+		<div class="projects-panel__inner">
+			<md-tab-group>
+				<!-- Own Projects -->
+				<md-tab label="Own Projects">
+					<p class="projects-panel__msg" *ngIf="msg" @fadeInUpAnimation>{{ msg }}</p>
+					<md-spinner *ngIf="!hiddeSpiner"></md-spinner>
+					<div class="projects-list" *ngIf="projects | async">
+						<a-project-thumb *ngFor="let project of projects | async | reverse" [project]="project" [isShared]="false"></a-project-thumb>
+					</div>
+				</md-tab>
+				<!-- Collective Projects -->
+				<md-tab label="Collective Projects" *ngIf="collectiveProjects | async">
+					<div class="projects-list">
+						<a-project-thumb *ngFor="let cProject of collectiveProjects | async;" [project]="cProject" [isShared]="true"></a-project-thumb>
+					</div>
+				</md-tab>
+				<p>{{collectiveProjects}}</p>
+			</md-tab-group>
+			<a md-fab color="warn" class="btn-add-project" (click)="openFormAddProject()">
+				<md-icon>add</md-icon>
+			</a>
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>
+<a-modal></a-modal>

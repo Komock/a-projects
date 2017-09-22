@@ -1,0 +1,14 @@
+<h4>Participants List</h4>
+<p *ngIf="msg">{{msg}}</p>
+<form class="form form--add-participants" (submit)="onSubmit($event)" [formGroup]="formModel">
+	<md-input-container class="form__input">
+		<input mdInput placeholder="E-mail" name="email" type="email" formControlName="email">
+	</md-input-container>
+	<button md-raised-button class="form__submit" type="submit" color="accent" [disabled]="!formModel.valid">Add</button>
+</form>
+<md-list *ngIf="participants" class="participants-list">
+	<md-list-item *ngFor="let participant of participants" color="accent">
+		<img *ngIf="participant.photoURL" mdListAvatar [src]="participant.photoURL">
+		<p mdLine>{{participant.displayName}}</p>
+	</md-list-item>
+</md-list>

@@ -1,0 +1,24 @@
+<div class="content">
+	<div class="wrap">
+		<div class="signin__inner">
+			<h2 class="form__title">Sign in</h2>
+			<form class="form form--signin" (ngSubmit)="onSubmit($event)" #signInForm="ngForm">
+				<div class="form__msg" [hidden]="!formMsg">{{formMsg}}</div>
+				<!-- <md-input-container class="form__input">
+					<input mdInput placeholder="Name" name="name" minlength="4" required [(ngModel)]="model.username">
+				</md-input-container> -->
+				<md-input-container class="form__input">
+					<input mdInput placeholder="E-mail" name="email" type="email" minlength="5" required [(ngModel)]="model.email">
+				</md-input-container>
+				<md-input-container class="form__input">
+					<input mdInput placeholder="Password" name="password" type="password" minlength="4" required [(ngModel)]="model.password">
+				</md-input-container>
+				<button md-raised-button class="form__submit" type="submit" color="accent" [disabled]="!signInForm.form.valid">Continue</button>
+			</form>
+			<div class="signin__w-services">
+				<p>or sign in with</p>
+				<button md-raised-button class="signin__btn signin__btn--google" color="warn" (click)="signInByGoogle()">Google</button>
+			</div>
+		</div>
+	</div>
+</div>

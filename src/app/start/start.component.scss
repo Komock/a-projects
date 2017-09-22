@@ -1,0 +1,36 @@
+:host {
+	display: block;
+}
+
+.start__title {
+	font-weight: 300;
+	font-size: 36px;
+	text-align: center;
+	max-width: 400px;
+	margin: 0 auto;
+}
+
+.slider {
+	width: 600px;
+    margin: 45px auto 0;
+    .slide {
+    	position: relative;
+    	background: #000;
+    	img {
+    		opacity: 0.6;
+    	}
+    	&__title {
+			position: absolute;
+			top: 50%;
+			left: 0;
+			right: 0;
+			margin: 0;
+			color: #fff;
+			text-align: center;
+			transform: translateY(-50%);
+    	}
+    }
+    &--show {
+    	display: block;
+    }
+}

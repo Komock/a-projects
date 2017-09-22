@@ -1,0 +1,12 @@
+<div class="modal" [ngClass]="[isOpen, modalClass]">
+	<div class="modal__content">
+		<div class="modal__wrap">
+			<div #modalContent></div>
+		</div>
+	</div>
+	<div class="modal__close">
+		<small>Or press "ESC"</small>
+		<button md-raised-button color="primary" (click)="close()">Close</button>
+	</div>
+	<div class="modal__overlay"></div>
+</div>

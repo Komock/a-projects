@@ -1,0 +1,142 @@
+@import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "./scss/slick-carousel.scss";
+* {
+	box-sizing: border-box;
+}
+
+body,
+html {
+	margin: 0;
+	min-height: 100%;
+	height: 100%;
+	font-family: 'Roboto', sans-serif;
+	font-size: 16px;
+}
+
+.preloader--main {
+	text-align: center;
+	margin: 0;
+	padding: 100px 0;
+}
+
+.content {
+	padding: 100px 0;
+	min-height: 100%;
+	height: 100%;
+	&--start {
+		display: flex;
+		align-items: center;
+	}
+}
+
+.wrap {
+	max-width: 1140px;
+	margin: 0 auto;
+	padding: 0 16px;
+}
+
+a {
+	&-signup {
+		display: block;
+	}
+}
+
+//====== Modal
+.modal {
+	position: fixed;
+	display: none;
+	overflow: scroll;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	z-index: 99;
+	&--open {
+		display: block;
+	}
+	&__overlay {
+		background: #000;
+		position: fixed;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		z-index: 1;
+		opacity: .48;
+	}
+	&__close {
+		position: absolute;
+		top: 24px;
+		right: 24px;
+		text-align: right;
+		z-index: 10;
+		small {
+			color: #999;
+			margin-right: 16px;
+		}
+		&__btn {
+			text-transform: uppercase;
+		}
+	}
+	&__content {
+		position: relative;
+		margin: 100px auto;
+		background: #fff;
+		padding: 30px;
+		z-index: 2;
+		border-radius: 2px;
+		box-shadow: 0 11px 15px -7px rgba(0, 0, 0, .2), 0 24px 38px 3px rgba(0, 0, 0, .14), 0 9px 46px 8px rgba(0, 0, 0, .12);
+	}
+	&__wrap {
+		max-width: 360px;
+		margin: 0 auto;
+	}
+	&--white {
+		.modal__overlay {
+			background: #fff;
+			opacity: 1;
+		}
+		.modal__content {
+			background: transparent;
+			box-shadow: none;
+		}
+		.modal__wrap {
+			max-width: 500px;
+		}
+		.form__submit {
+			margin-top: 36px;
+		}
+	}
+}
+
+//====== Projects Panel Tabs
+.mat-tab-body-wrapper {
+	margin-left: -10px;
+	margin-right: -10px;
+}
+
+//====== Form
+.form {
+	&__main-info {
+		display: flex;
+		margin: 0 -15px;
+	}
+	&__project-info {
+		width: 50%;
+		padding: 0 15px;
+	}
+	&__input {
+		position: relative;
+		width: 100%;
+		&--title {
+			font-size: 24px;
+		}
+	}
+	&__submit {
+		width: 100%;
+		display: block;
+	}
+	&__title {
+		text-align: center
+	}
+}

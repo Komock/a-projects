@@ -1,0 +1,21 @@
+:host {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+}
+.logo {
+	a {
+		color: #fff;
+		text-decoration: none;
+		text-transform: uppercase;
+		letter-spacing: 3px;
+		font-size: 14px;
+	}
+}
+
+.a-toolbar-margin {
+	flex: 1 1 auto;
+}

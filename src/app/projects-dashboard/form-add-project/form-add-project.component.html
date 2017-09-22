@@ -1,0 +1,22 @@
+<form *ngIf="project" class="form form--add-project" (ngSubmit)="onSubmit($event)" #addProjectForm="ngForm">
+<!-- 	<div class="form__main-info"> -->
+		<!-- <div class="thumb">
+			<div class="thumb__input-wrap">
+				<input class="thumb__input" type="file" name="fileupload" accept="image/jpg,image/jpeg,image/png" (change)="onFileChange($event.target)">
+				<div class="thumb__placeholder" [style.background-image]="thumbBg"></div>
+				<div class="thumb__txt">
+					<p>Choose image</p>
+					<small>Max. size 1mb</small>
+				</div>
+			</div>
+			<p [hidden]="!fileUploadError">{{fileUploadError}}</p>
+		</div> -->
+	<md-input-container class="form__input form__input--title">
+		<input mdInput placeholder="Title" name="title" type="text" minlength="4" required [(ngModel)]="project.title">
+	</md-input-container>
+	<md-input-container class="form__input form__input--description">
+		<textarea mdInput md-autosize  minRows="7" placeholder="Description" name="description" [(ngModel)]="project.description"></textarea>
+	</md-input-container>
+	<button md-raised-button class="form__submit" type="submit" color="primary" [disabled]="!addProjectForm.form.valid">Add project</button>
+</form>
+<!-- <md-progress-bar class="thumb__progress" color="accent" mode="determinate" [hidden]="!thumbLoading" [value]="fileUploadProgress"></md-progress-bar> -->

@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "outDir": "./dist/out-tsc",
+    "baseUrl": "src",
+    "sourceMap": true,
+    "declaration": false,
+    "module": "commonjs",
+    "moduleResolution": "ES6",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "target": "ES5",
+    "typeRoots": [
+      "node_modules/@types",
+      "types"
+    ],
+    "files": [
+      "./types/custom/index.d.ts",
+      "./types/custom/some.d.ts"
+    ],
+    "lib": [
+      "es2016",
+      "dom"
+    ]
+  }
+}

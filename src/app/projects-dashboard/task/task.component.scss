@@ -1,0 +1,84 @@
+:host {
+	display: block;
+}
+
+.task {
+	display: flex;
+	flex: 0 40px;
+	align-items: center;
+	border-left: 3px solid #ddd;
+	&:hover .task__status {
+		opacity: 1;
+	}
+	&__status {
+		position: absolute;
+		top: -12px;
+		font-size: 12px;
+		margin-bottom: 6px;
+		padding-left: 12px;
+		opacity: 0;
+		transition: 0.3s;
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 5px;
+			height: 5px;
+			border-radius: 50%;
+		}
+
+	}
+	&--pended {
+		border-left-color: #64B5F6;
+		.task__status {
+			color: #64B5F6;
+			&:before {
+				background: #64B5F6;
+			}
+		}
+	}
+	&--completed {
+		border-left-color: #81C784;
+		.task__status {
+			color: #81C784;
+			&:before {
+				background: #81C784;
+			}
+		}
+	}
+}
+
+.icon-completed {
+	color: #81C784;
+}
+
+.icon-pended {
+	color: #64B5F6;
+}
+
+
+.mat-menu-item {
+	font-size: 14px;
+	line-height: 30px;
+	height: 30px;
+	.mat-icon {
+		font-size: 20px;
+		margin-right: 4px;
+	}
+}
+
+.mat-card {
+	padding: 0 20px;
+}
+
+.mat-input-container {
+	width: 100%;
+}
+
+.mat-checkbox {
+	margin-right: 12px;
+	margin-top: -7px;
+}
