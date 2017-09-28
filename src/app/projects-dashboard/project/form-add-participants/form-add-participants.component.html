@@ -6,8 +6,8 @@
 	</md-input-container>
 	<button md-raised-button class="form__submit" type="submit" color="accent" [disabled]="!formModel.valid">Add</button>
 </form>
-<md-list *ngIf="participants" class="participants-list">
-	<md-list-item *ngFor="let participant of participants" color="accent">
+<md-list [@fadeInAnimation]="participants.length" class="participants-list">
+	<md-list-item *ngFor="let participant of participants">
 		<img *ngIf="participant.photoURL" mdListAvatar [src]="participant.photoURL">
 		<p mdLine>{{participant.displayName}}</p>
 	</md-list-item>

@@ -1,22 +1,20 @@
 <md-card class="task" ngClass="{{'task--' + task.value.status}}">
-	<md-checkbox color="primary" [id]="index"></md-checkbox>
+	<md-checkbox class="task__checkbox" ngClass="{{'task__checkbox--' + task.value.status}}" color="primary" [id]="index" (change)="some($event)" [checked]="task.value.status == 'completed'"></md-checkbox>
 	<md-input-container>
-	<!-- placeholder="{{index+1+'. Task'}}" -->
-		<!-- <div class="task__status">{{task.value.status}}</div> -->
 		<textarea mdInput md-autosize name="task" attr.data-task-index="{{index+1}}" value="{{task.value.title}}" tabindex="{{tabindex}}" (change)="updateTitle($event)"></textarea>
 	</md-input-container>
 	<button md-icon-button class="project__menu-btn" [mdMenuTriggerFor]="taskMenu">
 		<md-icon>more_vert</md-icon>
 	</button>
 	<md-menu #taskMenu="mdMenu" class="project__menu">
-		<button md-menu-item (click)="changeStatus('completed')">
+		<!-- <button md-menu-item *ngIf="!(task.value.status === 'completed')" (click)="changeStatus('completed')">
 			<md-icon class="icon-completed">done</md-icon>
 			<span>Completed</span>
 		</button>
-		<button md-menu-item (click)="changeStatus('pended')">
+		<button md-menu-item *ngIf="!(task.value.status === 'pended')" (click)="changeStatus('pended')">
 			<md-icon class="icon-pended">settings_backup_restore</md-icon>
 			<span>Pended</span>
-		</button>
+		</button> -->
 		<button md-menu-item (click)="delete(index)">
 			<md-icon>delete</md-icon>
 			<span>Delete</span>

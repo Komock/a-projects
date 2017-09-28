@@ -1,29 +1,37 @@
-import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Response } from '@angular/http';
 import { HttpService } from '../../../http.service';
 import { UserService } from '../../../user.service';
 import { Project } from '../project.class';
 
+// RX
+import { Subscription } from 'rxjs/Subscription';
+
 // Firebase
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+
+// Animations
+import { fadeInAnimation } from '../../../_animations/fade-in.animation';
 
 import { DOMAIN_TOKEN } from '../../../../../config';
 
 @Component({
 	selector: 'a-form-add-participants',
 	templateUrl: './form-add-participants.component.html',
-	styleUrls: ['./form-add-participants.component.scss']
+	styleUrls: ['./form-add-participants.component.scss'],
+	animations: [fadeInAnimation]
 })
-export class FormAddParticipantsComponent implements OnInit {
+export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 
 	public formModel: FormGroup;
 	public participantMail: string;
 	public msg: string;
 	public user: firebase.User;
 	public projectId: string;
-	public participants: firebase.User[];
+	public participants: firebase.User[] = [];
+	public projectSubscription: Subscription;
 	@Input()
 	public project$: FirebaseObjectObservable<Project>;
 	@Output()
@@ -59,7 +67,7 @@ export class FormAddParticipantsComponent implements OnInit {
 				})
 				.subscribe((participant: {[key: string]: User} | any[]) => {
 					console.log('participant: ', participant);
-					if (participant === []) {
+					if (participant.constructor === Array) {
 						this.msg = 'No user with this e-mail.';
 						setTimeout(() => { this.msg = ''; }, 3000);
 						return;
@@ -81,16 +89,20 @@ export class FormAddParticipantsComponent implements OnInit {
 				this.user = user;
 			});
 
-		this.project$
+		this.projectSubscription = this.project$
 			.subscribe((project: Project) => {
 				this.projectId = project.$key; // Get Project key
 				if (project.participants) {
-					const participants: any[] = [];
+					// const participants: firebase.User[] = [];
 					for (const key of Object.keys(project.participants)) {
-						participants.push(project.participants[key]);
+						this.participants.push(project.participants[key]);
 					}
-					this.participants = participants;
+					// this.participants = participants;
 				}
 			});
+	}
+
+	public ngOnDestroy(): void {
+		this.projectSubscription.unsubscribe();
 	}
 }

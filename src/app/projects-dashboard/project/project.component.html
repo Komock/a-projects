@@ -1,20 +1,15 @@
 <div class="modal modal--project modal--white">
 	<div class="modal__content">
-		<div class="modal__wrap">
+		<div class="modal__wrap" #wrap>
 			<div class="project__content" *ngIf="firebaseProject; else loading">
 				<div class="project__tool-bar" *ngIf="project">
 					<button md-icon-button class="project__menu-btn" routerLink="/projects">
 						<md-icon>grid_on</md-icon>
+						<small>Or press "ESC"</small>
 					</button>
 					<button md-icon-button class="project__menu-btn" [mdMenuTriggerFor]="projectMenu">
 						<md-icon>more_vert</md-icon>
 					</button>
-					<md-menu #projectMenu="mdMenu" class="project__menu" [overlapTrigger]="false">
-						<button md-menu-item (click)="deleteProject(project.$key)">
-							<md-icon>delete</md-icon>
-							<span>Delete</span>
-						</button>
-					</md-menu>
 				</div>
 				<div class="project__cols">
 					<div class="project__col">
@@ -34,8 +29,13 @@
 					<div class="project__col">
 						<form class="project-form" [formGroup]="formModel">
 							<!-- Task List -->
-							<div class="project__task-list" *ngIf="formModel.get('tasks').length; else noTask">
-								<a-task *ngFor="let task of formModel.get('tasks').controls; index as i" [tabindex]="i+3" [task]="task" [index]="i" (onDelete)="deleteTask($event)" (onUpdate)="updateTask($event)"></a-task>
+							<p class="no-tasks" *ngIf="!formModel.get('tasks').length">No tasks added yet(</p>
+							<div class="project__task-list" [@taskAnimation]="formModel.get('tasks').length">
+								<a-task 
+									*ngFor="let task of formModel.get('tasks').controls; index as i" 
+									[tabindex]="i+3" [task]="task" [index]="i" 
+									(onDelete)="deleteTask($event)" 
+									(onUpdate)="updateTask($event)"></a-task>
 							</div>
 							<p>
 								<button md-button class="project__btn-add-task" color="primary" (click)="addTask()">Add task</button>
@@ -46,15 +46,15 @@
 			</div>
 		</div>
 	</div>
-	<div class="modal__close">
-		<small>Or press "ESC"</small>
-		<button md-raised-button color="primary" (click)="back()">Close</button>
-	</div>
 	<div class="modal__overlay"></div>
 </div>
+<!-- Project menu -->
+<md-menu #projectMenu="mdMenu" class="project__menu" [overlapTrigger]="false">
+	<button md-menu-item (click)="deleteProject(project.$key)">
+		<md-icon>delete</md-icon>
+		<span>Delete</span>
+	</button>
+</md-menu>
 <ng-template #loading>
 	<md-spinner></md-spinner>
-</ng-template>
-<ng-template #noTask>
-	<p class="no-tasks">No tasks added yet(</p>
 </ng-template>

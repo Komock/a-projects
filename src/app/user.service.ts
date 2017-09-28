@@ -68,8 +68,10 @@ export class UserService {
 	}
 
 	public signOut(): void {
-		this._router.navigate(['']);
-		this._afAuth.auth.signOut();
+		this._router.navigate([''])
+			.then(() => {
+				this._afAuth.auth.signOut();
+			});
 	}
 
 	// Add Extra User Data

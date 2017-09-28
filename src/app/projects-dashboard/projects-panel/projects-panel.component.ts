@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+// Classes
 import { Project } from '../project/project.class';
 
 // Services

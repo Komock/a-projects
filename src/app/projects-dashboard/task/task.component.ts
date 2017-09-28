@@ -1,13 +1,13 @@
-import { Component, EventEmitter, OnInit, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, OnInit, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { MdCheckboxChange } from '@angular/material';
 
 import { Task } from './task.class';
 
 @Component({
 	selector: 'a-task',
 	templateUrl: './task.component.html',
-	styleUrls: ['./task.component.scss'],
-	changeDetection: ChangeDetectionStrategy.OnPush
+	styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
 	@Input()
@@ -49,6 +49,14 @@ export class TaskComponent implements OnInit {
 			index: this.index,
 			task: updatedTask
 		}, );
+	}
+
+	public some(e: MdCheckboxChange): void {
+		if (e.checked) {
+			this.changeStatus('completed');
+			return;
+		}
+		this.changeStatus('pended');
 	}
 
 	// TODO

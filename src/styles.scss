@@ -4,6 +4,14 @@
 	box-sizing: border-box;
 }
 
+.task__checkbox  {
+	&--completed {
+		.mat-checkbox-background {
+			background-color: #81C784 !important;
+		}
+	}
+}
+
 body,
 html {
 	margin: 0;

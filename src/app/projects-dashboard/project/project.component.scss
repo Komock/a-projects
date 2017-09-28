@@ -1,3 +1,9 @@
+:host {
+	display: block;
+	position: relative;
+	z-index: 10;
+}
+
 .modal {
 	&--project {
 		display: block;
@@ -33,7 +39,7 @@
 	}
 	&__tool-bar {
 		display: flex;
-		justify-content: flex-end;
+		justify-content: space-between;
 		min-height: auto;
 		padding: 0;
 		margin-bottom: 24px;
@@ -54,9 +60,8 @@
 }
 
 a-task {
-	margin-top: 8px;
 	&:first-child {
-		margin-top: 0;
+		padding-top: 0;
 	}
 }
 
