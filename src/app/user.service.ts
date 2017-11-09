@@ -1,6 +1,6 @@
 import { Injectable, Inject } from '@angular/core';
-import { HttpService } from './http.service';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
 import { DOMAIN_TOKEN } from '../../config';
 
 // Firebase
@@ -21,9 +21,9 @@ export class UserService {
 	public constructor(
 		@Inject(DOMAIN_TOKEN) private _domain: string,
 		private _router: Router,
-		private _http: HttpService,
 		private _db: AngularFireDatabase,
-		private _afAuth: AngularFireAuth
+		private _afAuth: AngularFireAuth,
+		private _httpClient: HttpClient
 		) {
 		this.user$ = _afAuth.authState;
 		this.userExtraData$ = this.user$
@@ -43,17 +43,22 @@ export class UserService {
 		});
 	}
 
-	// Sign Up
+	// ==== Sign Up
 	public signUpByEmail(user: LoginForm): Observable<firebase.User> {
 		const userProm: firebase.Promise<any> = this._afAuth
 			.auth.createUserWithEmailAndPassword(user.email, user.password);
 		userProm.then((fbUser: firebase.User) => {
+			console.log('this._afAuth: ', this._afAuth);
+			// this._afAuth.auth.currentUser.sendEmailVerification()
+			// 	.then(() => {
+			// 		console.log('Verification e-mail was send!');
+			// 	});
 			this.addExtraUserToDB(fbUser);
 		});
 		return Observable.fromPromise(userProm);
 	}
 
-	// Signin/Signup by Google
+	// ==== Signin/Signup by Google
 	public signInByGoogle(): void {
 		this._afAuth.auth.signInWithPopup(new firebase.auth.GoogleAuthProvider())
 			.then((res: any) => {
@@ -74,7 +79,27 @@ export class UserService {
 			});
 	}
 
-	// Add Extra User Data
+	// ==== Send Verification Email
+	public addVerificationLink(token: string, uid: string): Observable<any> {
+		if (!token || !uid) {
+			console.error('Error: wrong data provided!');
+			return Observable.of(false);
+		}
+		return this._httpClient
+			.post( `${this._domain}api/add-verification-link`, { token , uid});
+	}
+
+	public sendEmailVerification(token: string, uid: string, email: string): Observable<any> {
+		if (!token || !uid || !email) {
+			console.error('Error: wrong data provided!');
+			return Observable.of(false);
+		}
+		return this._httpClient
+			.post( `${this._domain}api/sent-verification-link`, { token , uid, email });
+	}
+
+
+	// ==== Add Extra User Data
 	private addExtraUserToDB(fbUser: firebase.User): void {
 		const userData: {[key: string]: any} = {};
 		const fbUserProps: string[] = ['uid', 'photoURL', 'email', 'emailVerified', 'providerId', 'displayName'];
@@ -89,4 +114,6 @@ export class UserService {
 				console.error(err);
 			});
 	}
+
+
 }

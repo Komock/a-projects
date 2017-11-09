@@ -1,41 +1,39 @@
-<div class="nav-list__wrap" *ngIf="!navHidden">
+<div class="nav-list__wrap" [ngClass]="{'nav-list__wrap--start': isStart}" *ngIf="!navHidden">
 	<ul class="nav-list nav-list--logged-in" *ngIf="user">
 		<li>
 			<a routerLink="/projects" routerLinkActive="active">
-				<button md-button>List</button>
+				<button mat-button>Projects</button>
 			</a>
 		</li>
 	</ul>
-	<ul class="nav-list nav-list--user" *ngIf="user">
-		<li class="avatar" [mdMenuTriggerFor]="userMenu">
-			<img *ngIf="user.photoURL; else iconAvatar" src="{{user.photoURL}}">
-			<md-menu #userMenu="mdMenu" class="nav__user-menu" [overlapTrigger]="false">
-				<button md-menu-item>
-					<md-icon>mail_outline</md-icon>
-					<span>{{user.email}}</span>
-				</button>
-				<button md-menu-item (click)="signOut($event)">
-					<md-icon>exit_to_app</md-icon>
-					<span>Sign Out</span>
-				</button>
-			</md-menu>
-		</li>
-	</ul>
+	<div class="avatar" *ngIf="user" [matMenuTriggerFor]="userMenu">
+		<span class="avatar__mail">{{user.email}}</span>
+		<img class="avatar__img" *ngIf="user.photoURL; else iconAvatar" src="{{user.photoURL}}">
+		<mat-menu #userMenu="matMenu" class="nav__user-menu" [overlapTrigger]="false">
+			<button mat-menu-item routerLink="/profile">
+				<mat-icon>person</mat-icon>
+				<span>Profile</span>
+			</button>
+			<button mat-menu-item (click)="signOut($event)">
+				<mat-icon>exit_to_app</mat-icon>
+				<span>Sign Out</span>
+			</button>
+		</mat-menu>
+	</div>
 	<ul class="nav-list nav-list--common" *ngIf="!user">
 		<li>
 			<a routerLink="/signup" routerLinkActive="active">
-				<button md-button>Sign Up</button>
+				<button mat-button>Sign Up</button>
 			</a>
 		</li>
 		<li class="nav-list__or">or</li>
 		<li>
 			<a routerLink="/signin" routerLinkActive="active">
-				<button md-button>Sign In</button>
+				<button mat-button>Sign In</button>
 			</a>
 		</li>
 	</ul>
 </div>
-
 <ng-template #iconAvatar>
-	<md-icon class="avatar--icon">account_circle</md-icon>
+	<mat-icon class="avatar--icon">account_circle</mat-icon>
 </ng-template>

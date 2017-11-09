@@ -1,14 +1,56 @@
 :host {
 	display: block;
+	min-height: 100%;
+	background: #000;
 }
 
-.start__title {
-	font-weight: 300;
-	font-size: 36px;
-	text-align: center;
-	max-width: 400px;
-	margin: 0 auto;
+.start {
+	&__bg {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		right: 0;
+		left: 0;
+		z-index: 1;
+		opacity: 0.9;
+		background-image: url('https://source.unsplash.com/OGj-lUI9TBQ/1600x900');
+		background-size: cover;
+		background-position: center;
+		// AU1rKyKPJco
+		// OGj-lUI9TBQ
+		// Sc5RKXLBjGg
+		// https://source.unsplash.com/OGj-lUI9TBQ/1600x900
+		// https://source.unsplash.com/MWFWz4DWwKI/1600x900
+	}
+	&__title {
+		color: #fff;
+		font-weight: 300;
+		font-size: 36px;
+		text-align: center;
+		max-width: 400px;
+		margin: 0 auto;
+	}
+	&__or {
+		color: #fff;
+		margin: 0 10px;
+	}
+	&__btns {
+		text-align: center;
+	}
 }
+
+.content {
+	display: flex;
+	align-items: center;
+	height: 100vh;
+	& > .wrap {
+		position: relative;
+		display: flex;
+		align-items: center;
+		z-index: 10;
+	}
+}
+
 
 .slider {
 	width: 600px;

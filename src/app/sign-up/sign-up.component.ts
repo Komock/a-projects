@@ -20,6 +20,7 @@ import { fadeInAnimation } from '../_animations/fade-in.animation';
 export class SignUpComponent implements OnInit {
 
 	public formMsg: string = '';
+	public sendVerificationMsg: string = '';
 	public submitted: boolean = false;
 	public notValid: boolean = false;
 
@@ -47,10 +48,42 @@ export class SignUpComponent implements OnInit {
 		this._userService.signInByGoogle();
 	}
 
+	public test(e: Event): void {
+		console.log('click');
+		this.sendVerificationMsg = 'Adding verification link...';
+	}
+
 	public ngOnInit(): void {
 		this._userService.user$.subscribe((user: firebase.User) => {
-			if (user !== null) {
-				this._router.navigate(['projects']);
+			if (user !== null ) {
+				if (user.emailVerified) {
+					this._router.navigate(['projects']);
+					return;
+				}
+
+				user.getIdToken().then((token: string) => {
+					const uid: string = user.uid;
+					const email: string = user.email;
+					this.sendVerificationMsg = 'Adding verification link...';
+					this._userService.addVerificationLink(token, uid)
+						.switchMap((response: any) => {
+							if (response.error) {
+								console.error(response.error); // TODO error message sending
+								return;
+							}
+							this.sendVerificationMsg = 'Sending e-mail...';
+							return this._userService.sendEmailVerification(token, uid, email);
+						})
+						.subscribe((response: any) => {
+							if (response.error) {
+								console.error(response.error); // TODO error message sending
+								return;
+							}
+							this.sendVerificationMsg = 'Mail was sent!';
+							console.log('response: ', response);
+							// this._router.navigate(['should-verify-email']);
+						});
+				});
 			}
 		});
 	}

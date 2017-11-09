@@ -2,11 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute, Event, NavigationEnd } from '@angular/router';
 
 // Services
-import { TitleService } from './title.service';
+import { TitleService } from '../title.service';
 
 // Components
-import { HeaderComponent } from './header/header.component';
-import { ModalService } from './modal.service';
+import { HeaderComponent } from '../header/header.component';
+import { ModalService } from '../modal.service';
 
 // RX
 import 'rxjs/add/operator/map';

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { UserService } from '../user.service';
 
 // FB
@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs/Subscription';
 	styleUrls: ['./nav.component.scss']
 })
 export class NavComponent implements OnInit, OnDestroy {
+	@Input() public isStart: boolean;
 	public user: firebase.User;
 	public navHidden: boolean = true; // Wait status from API, hide Nav
 	public userSubscription: Subscription;
@@ -30,7 +31,6 @@ export class NavComponent implements OnInit, OnDestroy {
 	public ngOnInit(): void {
 		this.userSubscription = this._userService.userExtraData$
 			.subscribe((user: firebase.User) => {
-				console.log('userSubscription', user);
 				this.user = user;
 				this.navHidden = false;
 			});

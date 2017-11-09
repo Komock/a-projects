@@ -6,6 +6,21 @@
 	right: 0;
 	z-index: 100;
 }
+
+.mat-toolbar {
+	background: #1f2633;
+	/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#689eff+0,7deaff+100 */
+	// background: #689eff; /* Old browsers */
+	// background: -moz-linear-gradient(left, #689eff 0%, #7deaff 100%); /* FF3.6-15 */
+	// background: -webkit-linear-gradient(left, #689eff 0%,#7deaff 100%); /* Chrome10-25,Safari5.1-6 */
+	// background: linear-gradient(to right, #689eff 0%,#7deaff 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	// filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#689eff', endColorstr='#7deaff',GradientType=1 ); /* IE6-9 */
+}
+
+.mat-toolbar--start {
+	background: rgba(0,0,0, 0);
+}
+
 .logo {
 	a {
 		color: #fff;

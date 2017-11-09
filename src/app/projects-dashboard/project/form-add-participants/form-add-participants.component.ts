@@ -1,11 +1,13 @@
-import { Component, OnInit, OnDestroy, Inject, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Response } from '@angular/http';
-import { HttpService } from '../../../http.service';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../../user.service';
+import { ProjectsService } from '../../../projects.service';
 import { Project } from '../project.class';
 
 // RX
+import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 
 // Firebase
@@ -24,7 +26,6 @@ import { DOMAIN_TOKEN } from '../../../../../config';
 	animations: [fadeInAnimation]
 })
 export class FormAddParticipantsComponent implements OnInit, OnDestroy {
-
 	public formModel: FormGroup;
 	public participantMail: string;
 	public msg: string;
@@ -34,13 +35,13 @@ export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 	public projectSubscription: Subscription;
 	@Input()
 	public project$: FirebaseObjectObservable<Project>;
-	@Output()
-	public onAddParticipant: EventEmitter<{[key: string]: User}> = new EventEmitter<{[key: string]: User}>();
+
 
 	public constructor(
 		@Inject(DOMAIN_TOKEN) private _domain: string,
-		private _http: HttpService,
+		private _httpClient: HttpClient,
 		private _userService: UserService,
+		private _projectsService: ProjectsService,
 		private _formBuilder: FormBuilder,
 		private _db: AngularFireDatabase
 	) {}
@@ -55,31 +56,41 @@ export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 			return false;
 		}
 
-		console.log();
-
-		// Authorize Custom API by Token
-		this.user.getIdToken().then((token: string) => {
-			this._http.post( `${this._domain}api/add-participant`, {
-					token,
-					uid: this.user.uid,
-					projectId: this.projectId,
-					email: this.formModel.controls.email.value
+		this.user.getIdToken().then((token: string) => { // Authorize Custom API by Token
+			const body: any = {
+				uid: this.user.uid,
+				projectId: this.projectId,
+				email: this.formModel.controls.email.value
+			};
+			this._httpClient.post(
+					`${this._domain}api/add-participant`,
+					body,
+					{ headers: new HttpHeaders().set( 'Authorization', token )} )
+				.catch((response: HttpErrorResponse) => {
+					return Observable.of({error: response.statusText});
 				})
-				.subscribe((participant: {[key: string]: User} | any[]) => {
-					console.log('participant: ', participant);
-					if (participant.constructor === Array) {
+				.subscribe((data: any) => {
+					console.log('Participant: ', data);
+					if (!data) {
 						this.msg = 'No user with this e-mail.';
-						setTimeout(() => { this.msg = ''; }, 3000);
-						return;
+						setTimeout(() => { this.msg = ''; }, 3000); // Hide MSG
+					} else if (data.error) {
+						this.msg = 'Something went wrong. Pleace try later.';
+					} else {
+						// const user: User = data[ Object.keys(data)[0] ];
+						// this._projectsService.addParticipant({
+						// 		participantUid: user.uid,
+						// 		email: user.email,
+						// 		displayName: user.displayName || '',
+						// 		photoURL: user.photoURL || ''
+						// 	}).catch(this.errorHandler);
 					}
-					this.onAddParticipant.emit(participant as {[key: string]: User});
 				});
 			this.participantMail = '';
 		});
 	}
 
 	public ngOnInit(): void {
-
 		this.formModel = this._formBuilder.group({
 			email: ['', [Validators.required, Validators.minLength(4)]],
 		});
@@ -104,5 +115,9 @@ export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 
 	public ngOnDestroy(): void {
 		this.projectSubscription.unsubscribe();
+	}
+
+	private errorHandler(err: Error): void {
+		console.error(`${this.constructor.name}: `, err);
 	}
 }

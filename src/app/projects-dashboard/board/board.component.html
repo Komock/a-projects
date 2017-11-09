@@ -1,0 +1,58 @@
+<div class="modal modal--board">
+	<div class="modal__content">
+		<div class="modal__wrap" [@fadeInAnimation]="board">
+			<!-- Toolbar -->
+			<mat-toolbar class="board__toolbar" *ngIf="boardModel" color="primary">
+				<button mat-button class="board__title" [matMenuTriggerFor]="titleMenu">
+					<h4 class="board__title">
+						<span class="board__title-text">{{board.title | slice:0:20 }}{{board.title.length > 20 ? '...': ''}}</span></h4>
+				</button>
+				<span class="a-toolbar-margin" flex></span>
+				<button mat-icon-button class="board__menu-btn" [matMenuTriggerFor]="boardMenu">
+					<mat-icon>more_vert</mat-icon>
+				</button>
+			</mat-toolbar>
+			<div class="board__cols" *ngIf="boardModel; else preloader">
+				<div class="board__col board__task-list">
+					<a-task-list></a-task-list>
+				</div>
+				<div *ngIf="!activeTask" class="board__col board__desc">
+					<!-- Description -->
+					<h4 class="desc-title">Board description:</h4>
+					<form class="desc-form" *ngIf="boardModel" [formGroup]="boardModel">
+						<mat-input-container class="form__input">
+							<textarea matInput mat-autosize minRows="7" name="description" formControlName="description" (change)="updateBoard($event)"></textarea>
+						</mat-input-container>
+					</form>
+					<ul class="board__info">
+						<li>Created: {{ board.creationDate | date:'short' }}</li>
+						<li>Updated: {{ board.updateDate | date:'short' }}</li>
+					</ul>
+				</div>
+				<a-task-actions class="board__col board__task-actions"></a-task-actions>
+			</div>
+		</div>
+	</div>
+	<div class="modal__overlay" (click)="back()"></div>
+</div>
+<!-- Title menu -->
+<mat-menu #titleMenu="matMenu" class="board__menu edit-box" [overlapTrigger]="false">
+	<form *ngIf="boardModel" [formGroup]="boardModel" (click)="$event.stopPropagation()">
+		<mat-input-container>
+			<input matInput formControlName="title" name="title" type="text" (change)="updateBoard($event)">
+		</mat-input-container>
+	</form>
+</mat-menu>
+<!-- Board menu -->
+<mat-menu #boardMenu="matMenu" class="board__menu" [overlapTrigger]="false">
+	<button mat-menu-item (click)="deleteBoard(board.$key)">
+		<mat-icon>delete</mat-icon>
+		<span>Delete</span>
+	</button>
+</mat-menu>
+<!-- Preloader -->
+<ng-template #preloader>
+	<div class="preloader__wrap">
+		<mat-spinner [diameter]="45" [strokeWidth]="3"></mat-spinner>
+	</div>
+</ng-template>

@@ -1,25 +1,23 @@
 :host {
 	display: block;
 	padding-top: 8px;
+	margin-bottom: 8px;
+	background: red;
 }
 
 
-
 .task {
-	display: flex;
-	flex: 0 40px;
-	align-items: center;
-	border-left: 3px solid #ddd;
+	// border-left: 3px solid #ddd;
 	&--pended {
-		border-left-color: #64B5F6;
-		.mat-checkbox-background {
-			background-color: #64B5F6 !important;
-		}
+		// border-left-color: #64B5F6;
 	}
 	&--completed {
-		border-left-color: #81C784;
+		// border-left-color: #81C784;
 		.mat-checkbox-background {
-			background-color: #81C784 !important;
+			background: #81C784;
+		}
+		.task__input {
+			opacity: 0.5;
 		}
 	}
 }
@@ -32,6 +30,9 @@
 	color: #64B5F6;
 }
 
+.mat-list .mat-list-item .mat-list-item-content {
+	padding-right: 5px;
+}
 
 .mat-menu-item {
 	font-size: 14px;
@@ -41,10 +42,6 @@
 		font-size: 20px;
 		margin-right: 4px;
 	}
-}
-
-.mat-card {
-	padding: 0 20px;
 }
 
 .mat-input-container {

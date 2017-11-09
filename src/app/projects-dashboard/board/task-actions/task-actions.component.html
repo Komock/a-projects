@@ -1,0 +1,21 @@
+<div class="task-actions" *ngIf="activeTask">
+	<ul class="task-actions__btns">
+		<li>
+			<button mat-icon-button (click)="delete()">
+				<mat-icon>delete</mat-icon>
+			</button>
+		</li>
+		<li>
+			<button mat-icon-button (click)="closeTaskActions()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</li>
+	</ul>
+	<p>{{ activeTask | json }}</p>
+	<div>
+		<mat-input-container>
+			<textarea class="" matInput mat-autosize value="{{activeTask.title}}" (keyup)="updateTitleView($event)" (change)="updateTitle($event)"></textarea>
+		</mat-input-container>
+
+	</div>
+</div>

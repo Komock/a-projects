@@ -46,8 +46,12 @@ export class SignInComponent implements OnInit {
 
 	public ngOnInit(): void {
 		this._userService.user$.subscribe((user: firebase.User) => {
-			if (user !== null) {
-				this._router.navigate(['projects']);
+			if (user !== null ) {
+				if (user.emailVerified) {
+					this._router.navigate(['projects']);
+					return;
+				}
+				this._router.navigate(['should-verify-email']);
 			}
 		});
 	}

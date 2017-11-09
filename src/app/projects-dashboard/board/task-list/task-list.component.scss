@@ -1,0 +1,41 @@
+:host {
+	display: block;
+}
+
+a-task {
+	display: block;
+}
+
+.board {
+	&__btn-add-task-wrap {
+		display: flex;
+		justify-content: center;
+	}
+	&__task-list {
+		margin-top: 6px;
+	}
+}
+
+.task-list {
+	&__status-select-wrap {
+		position: relative;
+		padding: 0 15px;
+	}
+	&__status-select {
+		max-width: 180px;
+		padding-bottom: 10px;
+		border-bottom: 1px solid rgba(0,0,0,.42);
+	}
+}
+
+.task-wrap {
+	border-radius: 2px;
+	&--active {
+		background: #f5f5f5;
+	}
+}
+
+.no-tasks {
+	text-align: center;
+	color: #999;
+}

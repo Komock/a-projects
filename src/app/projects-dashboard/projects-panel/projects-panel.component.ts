@@ -38,7 +38,7 @@ import { FormAddProjectComponent } from '../form-add-project/form-add-project.co
 export class ProjectsPanelComponent implements OnInit, OnDestroy {
 	public msg: string = '';
 	public hiddeSpiner: boolean = false;
-	public projects: FirebaseListObservable<Project[]>;
+	public projects: Project[];
 	public collectiveProjects: Observable<Project[]>;
 	public projectsSubscription$$: Subscription;
 	public projectsSubscription: Subscription;
@@ -60,25 +60,6 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit(): void {
-		// Own Projects Subscription
-		this.projectsSubscription$$ = this._projectsService.projectsSubject$$
-			.catch((err: string ) => {
-				console.warn(err);
-				this.hiddeSpiner = true;
-				this.msg = err;
-				return Observable.from([]);
-			})
-			.subscribe((projects$: FirebaseListObservable<Project[]>) => {
-				this.projects = projects$;
-				this.projectsSubscription = this.projects.subscribe((projects: Project[]) => {
-					if (!projects.length) {
-						this.msg = `You don't have own Projects yet.`;
-						return;
-					}
-					this.msg = '';
-				});
-				this.hiddeSpiner = true;
-			});
 
 		// Get User Data for Projects requests
 		this.userExtraDataSubscription = this._userService
@@ -87,7 +68,22 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 					return;
 				}
 				// Get Own Projects
-				this._projectsService.getProjects(userExtraData.uid);
+				this.projectsSubscription = this._projectsService.getProjects()
+					.catch((err: string ) => {
+						console.warn(err);
+						this.hiddeSpiner = true;
+						this.msg = err;
+						return Observable.from([]);
+					})
+					.subscribe((projects: Project[]) => {
+						this.hiddeSpiner = true;
+						this.projects = projects;
+						if (!projects.length) {
+							this.msg = `You don't have own Projects yet.`;
+							return;
+						}
+						this.msg = '';
+					});
 
 				// Get Collective Projects
 				if (userExtraData.collectiveProjects
@@ -98,9 +94,7 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnDestroy(): void {
-		console.log('ngOnDestroy panel');
 		this.projectsSubscription.unsubscribe();
-		this.projectsSubscription$$.unsubscribe();
 		this.userExtraDataSubscription.unsubscribe();
 	}
 }

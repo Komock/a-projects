@@ -1,41 +1,45 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MdProgressBarModule, MdMenuModule, MdIconModule, MdCardModule,
-		MdToolbarModule, MdButtonModule, MdCheckboxModule, MdChipsModule,
-		MdProgressSpinnerModule, MdInputModule, MdDialogModule, MdTabsModule,
-		MdListModule } from '@angular/material';
+import { MatProgressBarModule, MatMenuModule, MatIconModule, MatCardModule,
+		MatToolbarModule, MatButtonModule, MatCheckboxModule, MatChipsModule,
+		MatProgressSpinnerModule, MatInputModule, MatDialogModule, MatTabsModule,
+		MatListModule, MatSidenavModule, MatSelectModule } from '@angular/material';
 
 @NgModule({
 	imports: [
 		CommonModule,
-		MdButtonModule,
-		MdCheckboxModule,
-		MdChipsModule,
-		MdToolbarModule,
-		MdCardModule,
-		MdIconModule,
-		MdMenuModule,
-		MdProgressSpinnerModule,
-		MdInputModule,
-		MdDialogModule,
-		MdProgressBarModule,
-		MdTabsModule,
-		MdListModule
+		MatButtonModule,
+		MatCheckboxModule,
+		MatChipsModule,
+		MatToolbarModule,
+		MatCardModule,
+		MatIconModule,
+		MatMenuModule,
+		MatProgressSpinnerModule,
+		MatInputModule,
+		MatDialogModule,
+		MatProgressBarModule,
+		MatTabsModule,
+		MatListModule,
+		MatSidenavModule,
+		MatSelectModule
 	],
 	exports: [
-		MdButtonModule,
-		MdCheckboxModule,
-		MdChipsModule,
-		MdToolbarModule,
-		MdCardModule,
-		MdIconModule,
-		MdMenuModule,
-		MdProgressSpinnerModule,
-		MdInputModule,
-		MdDialogModule,
-		MdProgressBarModule,
-		MdTabsModule,
-		MdListModule
+		MatButtonModule,
+		MatCheckboxModule,
+		MatChipsModule,
+		MatToolbarModule,
+		MatCardModule,
+		MatIconModule,
+		MatMenuModule,
+		MatProgressSpinnerModule,
+		MatInputModule,
+		MatDialogModule,
+		MatProgressBarModule,
+		MatTabsModule,
+		MatListModule,
+		MatSidenavModule,
+		MatSelectModule
 	],
 	declarations: []
 })

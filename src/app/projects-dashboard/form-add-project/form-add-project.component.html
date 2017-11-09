@@ -11,12 +11,12 @@
 			</div>
 			<p [hidden]="!fileUploadError">{{fileUploadError}}</p>
 		</div> -->
-	<md-input-container class="form__input form__input--title">
-		<input mdInput placeholder="Title" name="title" type="text" minlength="4" required [(ngModel)]="project.title">
-	</md-input-container>
-	<md-input-container class="form__input form__input--description">
-		<textarea mdInput md-autosize  minRows="7" placeholder="Description" name="description" [(ngModel)]="project.description"></textarea>
-	</md-input-container>
-	<button md-raised-button class="form__submit" type="submit" color="primary" [disabled]="!addProjectForm.form.valid">Add project</button>
+	<mat-input-container class="form__input form__input--title">
+		<input matInput placeholder="Title" name="title" type="text" minlength="4" required [(ngModel)]="project.title">
+	</mat-input-container>
+	<mat-input-container class="form__input form__input--description">
+		<textarea matInput mat-autosize  minRows="7" placeholder="Description" name="description" [(ngModel)]="project.description"></textarea>
+	</mat-input-container>
+	<button mat-raised-button class="form__submit" type="submit" color="primary" [disabled]="!addProjectForm.form.valid">Add project</button>
 </form>
-<!-- <md-progress-bar class="thumb__progress" color="accent" mode="determinate" [hidden]="!thumbLoading" [value]="fileUploadProgress"></md-progress-bar> -->
+<!-- <mat-progress-bar class="thumb__progress" color="accent" mode="determinate" [hidden]="!thumbLoading" [value]="fileUploadProgress"></mat-progress-bar> -->

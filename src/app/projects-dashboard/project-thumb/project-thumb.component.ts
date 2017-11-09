@@ -18,9 +18,7 @@ export class ProjectThumbComponent implements OnInit {
 	@Input() public project: Project | FirebaseObjectObservable<Project>;
 	public projectThumbUrlSave: SafeStyle;
 	public constructor(
-		private _sanitizer: DomSanitizer,
-		private _projectsService: ProjectsService,
-		private _modalService: ModalService
+		private _sanitizer: DomSanitizer
 	) {}
 
 	public ngOnInit(): void {

@@ -1,21 +1,21 @@
 <a class="thumb__link" *ngIf="!isShared; else sharedThumb" routerLink="/projects/{{project.$key}}">
-	<md-card color="primary">
+	<mat-card color="primary">
 		<div class="thumb__placeholder" *ngIf="projectThumbUrlSave" [style.background-image]="projectThumbUrlSave"></div>
-		<md-card-content>
+		<mat-card-content>
 			<h3 class="thumb__title">{{ project.title }}</h3>
 			<p class="thumb__description" *ngIf="project.description">{{ project.description | slice:0:100 }}{{project.description.length > 100 ? '...': ''}}</p>
-		</md-card-content>
-	</md-card>
+		</mat-card-content>
+	</mat-card>
 </a>
 <ng-template #sharedThumb>
 	<a class="thumb__link" routerLink="/projects/{{project.$key}}">
-		<md-card color="primary">
+		<mat-card color="primary">
 			<div class="thumb__placeholder" *ngIf="projectThumbUrlSave" [style.background-image]="projectThumbUrlSave"></div>
-			<md-card-content>
+			<mat-card-content>
 				<h3 class="thumb__title">{{ project.title }}</h3>
 				<p class="thumb__description" *ngIf="project.description">{{ project.description | slice:0:100 }}{{project.description.length > 100 ? '...': ''}}</p>
 				<p>Owner: {{ project.ownerId }}</p>
-			</md-card-content>
-		</md-card>
+			</mat-card-content>
+		</mat-card>
 	</a>
 </ng-template>

@@ -2,6 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule }   from '@angular/router';
+import { HttpClientModule, HttpClient }   from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BaseRequestOptions, HttpModule } from '@angular/http';
@@ -11,7 +12,7 @@ import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 
 // Components
-import { AppComponent } from './app.component';
+import { AppComponent } from './app/app.component';
 import { HeaderComponent } from './header/header.component';
 import { NavComponent } from './nav/nav.component';
 import { StartComponent } from './start/start.component';
@@ -21,19 +22,23 @@ import { SlickCarouselComponent } from './slick-carousel/slick-carousel.componen
 import { SlickCarouselItemDirective } from './slick-carousel/slick-carousel-item.directive';
 
 // Services
-import { HttpService } from './http.service';
 import { TitleService } from './title.service';
 import { ProjectsService } from './projects.service';
+import { TaskListService } from './task-list.service';
 import { UserService } from './user.service';
 import { ModalService } from './modal.service';
 import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 import { ProjectsPanelGuardService } from './projects-dashboard/projects-panel-guard.service';
+import { SigninGuardService } from './sign-in/signin-guard.service';
+
 
 // Config
 import { DOMAIN, DOMAIN_TOKEN, FIREBASE } from '../../config';
 
 // Routes
 import { routes } from './app.routes';
+import { ShouldVerifyEmailComponent } from './should-verify-email/should-verify-email.component';
+import { ProfileComponent } from './profile/profile.component';
 
 
 @NgModule({
@@ -45,13 +50,15 @@ import { routes } from './app.routes';
 		SignInComponent,
 		SignUpComponent,
 		SlickCarouselComponent,
-		SlickCarouselItemDirective
+		SlickCarouselItemDirective,
+		ShouldVerifyEmailComponent,
+		ProfileComponent
 	],
 	imports: [
 		BrowserModule,
 		FormsModule,
 		ReactiveFormsModule,
-		HttpModule,
+		HttpClientModule,
 		MaterialModule,
 		RouterModule.forRoot(routes),
 		BrowserAnimationsModule,
@@ -64,14 +71,15 @@ import { routes } from './app.routes';
 			provide: DOMAIN_TOKEN,
 			useValue: DOMAIN
 		},
-		HttpService,
+		HttpClient,
 		TitleService,
 		ProjectsService,
+		TaskListService,
 		UserService,
 		ModalService,
-		BaseRequestOptions,
 		AngularFireDatabase,
-		ProjectsPanelGuardService
+		ProjectsPanelGuardService,
+		SigninGuardService
 	],
 	bootstrap: [AppComponent]
 })

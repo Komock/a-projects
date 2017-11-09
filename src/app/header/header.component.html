@@ -1,5 +1,5 @@
-<md-toolbar color="primary">
-	<div class="logo"><a routerLink="/">Projects</a></div>
+<mat-toolbar [ngClass]="{'mat-toolbar--start': isStart}">
+	<div class="logo"><a routerLink="/">A - Projects</a></div>
 	<span class="a-toolbar-margin" flex></span>
-	<a-nav></a-nav>
-</md-toolbar>
+	<a-nav [isStart]="isStart"></a-nav>
+</mat-toolbar>

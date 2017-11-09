@@ -1,0 +1,17 @@
+<div class="board__col board__col--task-list" *ngIf="taskList">
+	<div class="task-list__status-select-wrap">
+		<mat-select class="task-list__status-select" placeholder="All" [(ngModel)]="selectedStatus" name="status" placeholder="All" (change)="filterTaskList($event)">
+			<mat-option *ngFor="let status of statuses" [value]="status.val">
+				{{status.name}}
+			</mat-option>
+		</mat-select>
+	</div>
+	<!-- Task List -->
+	<p class="no-tasks" *ngIf="msg">{{ msg }}</p>
+	<mat-list class="board__task-list" [@taskAnimation]="taskList.length">
+		<a-task class="task-wrap" [ngClass]="{ 'task-wrap--active' : selectedTaskKey === task.$key }" *ngFor="let task of taskList; index as i" [task]="task" [index]="i" (onDelete)="deleteTask($event)" (onUpdate)="updateTask($event)"></a-task>
+	</mat-list>
+	<p *ngIf="selectedStatus !== 'completed'" class="board__btn-add-task-wrap">
+		<button mat-button class="board__btn-add-task" color="primary" (click)="addTask()">Add task</button>
+	</p>
+</div>

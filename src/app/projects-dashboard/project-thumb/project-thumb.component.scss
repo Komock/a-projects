@@ -1,4 +1,4 @@
-md-card {
+mat-card {
 	position: relative;
 	& > a {
 		display: block;
@@ -37,6 +37,6 @@ a {
 	}
 }
 
-md-card-content {
+mat-card-content {
 	margin-bottom: 0;
 }

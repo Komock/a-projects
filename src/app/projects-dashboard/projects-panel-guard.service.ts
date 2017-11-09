@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 
 import * as firebase from 'firebase/app';
 
@@ -15,11 +15,11 @@ export class ProjectsPanelGuardService implements CanActivate {
 		private _router: Router
 	) {}
 
-	public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+	public canActivate(): Observable<boolean> {
 		return this._userService.user$
 			.switchMap((user: firebase.User) => {
 				console.log('ProjectsPanelGuardService: ', user);
-				if (user) {
+				if (user && user.emailVerified) {
 					return Observable.of(true);
 				}
 				this._router.navigate(['']);

@@ -62,8 +62,7 @@ export class FormAddProjectComponent implements OnInit {
 
 	public onSubmit(e: Event): void {
 		e.preventDefault();
-		console.log(this.project);
-		this._projectsService.addProject(this.project);
+		this._projectsService.addProject(this.user.uid, this.project);
 		this._modalService.close();
 		// if (this.thumbFile) {
 		// 	const uploadTask: firebase.storage.UploadTask = this.uploadThumb();

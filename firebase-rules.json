@@ -1,11 +1,16 @@
 {
-	"rules": {
-		"users": {
-			"$uid": {
+	"rules":
+	{
+		"users":
+		{
+			"$uid":
+			{
 				".read": "auth.uid == $uid",
 				".write": "auth.uid == $uid",
-				"collectiveProjects": {
-					"$colProjId": {
+				"collectiveProjects":
+				{
+					"$colProjId":
+					{
 						".read": true,
 						".write": false
 					}
@@ -13,8 +18,10 @@
 			},
 			".indexOn": ["email"]
 		},
-		"projects": {
-			"$projectsId": {
+		"projects":
+		{
+			"$projectsId":
+			{
 				".read": "auth.uid == $projectsId || root.child('users').child(auth.uid).child('collectiveProjects').hasChild($projectsId)",
 				".write": "auth.uid == $projectsId"
 			}

@@ -4,6 +4,7 @@ export class Task {
 	public status: 'pended' | 'completed' | 'expired';
 	public creationDate: number;
 	public dueDate?: number;
+	public $key?: string;
 	public constructor (opts: any) {
 		this.title = opts.title;
 		this.description = opts.description || '';

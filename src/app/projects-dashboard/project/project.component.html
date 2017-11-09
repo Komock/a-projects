@@ -1,60 +1,70 @@
 <div class="modal modal--project modal--white">
+
+	<!-- Toolbar -->
+	<mat-toolbar *ngIf="project">
+		<button mat-button class="project__title" [matMenuTriggerFor]="titleMenu">
+			<span class="project__title-text">{{project.title | slice:0:20 }}{{project.title.length > 20 ? '...': ''}}</span>
+		</button>
+		<button mat-icon-button class="btn-edit" title="Description" [matMenuTriggerFor]="descMenu">
+			<mat-icon>short_text</mat-icon>
+		</button>
+		<span class="a-toolbar-margin" flex></span>
+		<button mat-icon-button class="project__menu-btn" [matMenuTriggerFor]="projectMenu">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+	</mat-toolbar>
+
+	<!-- Content -->
 	<div class="modal__content">
-		<div class="modal__wrap" #wrap>
-			<div class="project__content" *ngIf="firebaseProject; else loading">
-				<div class="project__tool-bar" *ngIf="project">
-					<button md-icon-button class="project__menu-btn" routerLink="/projects">
-						<md-icon>grid_on</md-icon>
-						<small>Or press "ESC"</small>
-					</button>
-					<button md-icon-button class="project__menu-btn" [mdMenuTriggerFor]="projectMenu">
-						<md-icon>more_vert</md-icon>
-					</button>
-				</div>
-				<div class="project__cols">
-					<div class="project__col">
-						<form class="project-form" *ngIf="project" [formGroup]="formModel">
-							<!-- Title -->
-							<md-input-container class="form__input form__input--title">
-								<input mdInput placeholder="Title" formControlName="title" name="title" type="text" tabindex="1" (change)="updateProject($event)">
-							</md-input-container>
-							<!-- Description -->
-							<md-input-container class="form__input form__input--description">
-								<textarea mdInput md-autosize minRows="7" placeholder="Description" name="description" tabindex="2" formControlName="description" (change)="updateProject($event)"></textarea>
-							</md-input-container>
-						</form>
-						<!-- Participants Form -->
-						<a-form-add-participants (onAddParticipant)="addParticipant($event)" [project$]="firebaseProject"></a-form-add-participants>
-					</div>
-					<div class="project__col">
-						<form class="project-form" [formGroup]="formModel">
-							<!-- Task List -->
-							<p class="no-tasks" *ngIf="!formModel.get('tasks').length">No tasks added yet(</p>
-							<div class="project__task-list" [@taskAnimation]="formModel.get('tasks').length">
-								<a-task 
-									*ngFor="let task of formModel.get('tasks').controls; index as i" 
-									[tabindex]="i+3" [task]="task" [index]="i" 
-									(onDelete)="deleteTask($event)" 
-									(onUpdate)="updateTask($event)"></a-task>
-							</div>
-							<p>
-								<button md-button class="project__btn-add-task" color="primary" (click)="addTask()">Add task</button>
-							</p>
-						</form>
-					</div>
-				</div>
+		<div class="project__content" *ngIf="project; else preloader">
+			<div class="project__boards" *ngIf="boards$ | async">
+				
+				<a-board-thumb class="board-thumb" 
+				*ngFor="let board of boards$ | async" [board]="board" 
+				[projectKey]="project.$key" ></a-board-thumb>
 			</div>
+			<!-- Participants Form -->
+			<a-form-add-participants [project$]="firebaseProject"></a-form-add-participants>
 		</div>
 	</div>
+
+	<!-- Add Board -->
+	<a mat-fab color="primary" class="btn-add-board" (click)="addBoard()">
+		<mat-icon>add</mat-icon>
+	</a>
+
 	<div class="modal__overlay"></div>
 </div>
+
+<router-outlet></router-outlet>
+
+<!-- Title menu -->
+<mat-menu #titleMenu="matMenu" class="project__menu edit-box" [overlapTrigger]="false">
+	<form [formGroup]="formModel" (click)="$event.stopPropagation()">
+		<mat-input-container>
+			<input matInput formControlName="title" name="title" type="text" tabindex="1" (change)="updateProject($event)">
+		</mat-input-container>
+	</form>
+</mat-menu>
+
+<!-- Description Menu -->
+<mat-menu #descMenu="matMenu" class="project__menu edit-box edit-box--desc" [overlapTrigger]="false">
+	<form [formGroup]="formModel" (click)="$event.stopPropagation()">
+		<mat-input-container class="form__input">
+			<textarea matInput mat-autosize minRows="7" name="description" tabindex="2" formControlName="description" (change)="updateProject($event)"></textarea>
+		</mat-input-container>
+	</form>
+</mat-menu>
+
 <!-- Project menu -->
-<md-menu #projectMenu="mdMenu" class="project__menu" [overlapTrigger]="false">
-	<button md-menu-item (click)="deleteProject(project.$key)">
-		<md-icon>delete</md-icon>
+<mat-menu #projectMenu="matMenu" class="project__menu" [overlapTrigger]="false">
+	<button mat-menu-item (click)="deleteProject(project.$key)">
+		<mat-icon>delete</mat-icon>
 		<span>Delete</span>
 	</button>
-</md-menu>
-<ng-template #loading>
-	<md-spinner></md-spinner>
+</mat-menu>
+
+<!-- Preloader -->
+<ng-template #preloader>
+	<mat-spinner diameter="45" strokeWidth="3"></mat-spinner>
 </ng-template>

@@ -7,6 +7,8 @@ export class ModalService {
 
 	private _modalSequence$$: Subject<any> = new Subject();
 
+	public constructor() { }
+
 	// Open
 	public open(componentObj: { component: any, context: any, modalClass: string }): void {
 		this._modalSequence$$.next(componentObj);
@@ -14,13 +16,10 @@ export class ModalService {
 
 	// Close
 	public close(): void {
-		this._modalSequence$$.next(null)
+		this._modalSequence$$.next(null);
 	}
 
 	public get modalSequence$(): Observable<any> {
 		return this._modalSequence$$.asObservable();
 	}
-
-	constructor() { }
-
 }

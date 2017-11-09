@@ -1,0 +1,61 @@
+:host {
+	display: block;
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 10000;
+}
+
+// ::ng-deep .mat-input-underline {
+// 	display: none;
+// }
+
+.modal {
+	display: block;
+	&__content {
+		max-width: 900px;
+		padding: 0;
+	}
+	&__wrap {
+		max-width: 100%
+	}
+}
+
+a-task {
+	&:first-child {
+		padding-top: 0;
+	}
+}
+
+.desc-title {
+	margin: 0;
+}
+
+.desc-form {
+	margin-top: 16px;
+}
+
+.board {
+	&__cols {
+		padding: 30px;
+		display: flex;
+		flex-flow: row wrap;
+	}
+	&__task-list {
+		width: 65%;
+		padding-right: 15px;
+	}
+	&__desc, &__task-actions {
+		width: 35%;
+		padding-left: 15px;
+	}
+	&__info {
+		list-style-type: none;
+		padding: 0;
+		margin: 8px 0 0;
+		font-size: 14px;
+		color: #999;
+	}
+}

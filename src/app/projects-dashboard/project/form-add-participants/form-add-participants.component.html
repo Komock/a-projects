@@ -1,14 +1,14 @@
 <h4>Participants List</h4>
 <p *ngIf="msg">{{msg}}</p>
 <form class="form form--add-participants" (submit)="onSubmit($event)" [formGroup]="formModel">
-	<md-input-container class="form__input">
-		<input mdInput placeholder="E-mail" name="email" type="email" formControlName="email">
-	</md-input-container>
-	<button md-raised-button class="form__submit" type="submit" color="accent" [disabled]="!formModel.valid">Add</button>
+	<mat-input-container class="form__input">
+		<input matInput placeholder="E-mail" name="email" type="email" formControlName="email">
+	</mat-input-container>
+	<button mat-raised-button class="form__submit" type="submit" color="accent" [disabled]="!formModel.valid">Add</button>
 </form>
-<md-list [@fadeInAnimation]="participants.length" class="participants-list">
-	<md-list-item *ngFor="let participant of participants">
-		<img *ngIf="participant.photoURL" mdListAvatar [src]="participant.photoURL">
-		<p mdLine>{{participant.displayName}}</p>
-	</md-list-item>
-</md-list>
+<mat-list [@fadeInAnimation]="participants.length" class="participants-list">
+	<mat-list-item *ngFor="let participant of participants">
+		<img *ngIf="participant.photoURL" matListAvatar [src]="participant.photoURL">
+		<p matLine>{{participant.displayName}}</p>
+	</mat-list-item>
+</mat-list>

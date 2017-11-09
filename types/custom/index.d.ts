@@ -12,6 +12,13 @@ type User = {
 	collectiveProjects: HashMap[];
 };
 
+type Participant = {
+	participantUid: string;
+	email: string;
+	displayName?: string;
+	photoURL?: string;
+};
+
 type LoginForm = {
 	email: string;
 	password: string;
@@ -21,10 +28,4 @@ type env = {
 	production: boolean;
 	domain: string;
 	firebase?: HashMap;
-};
-
-type Participant = {
-	uid: string;
-	email: string;
-	name?: string;
 };

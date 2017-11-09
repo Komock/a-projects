@@ -1,10 +1,13 @@
 @import "../node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css";
-@import "./scss/slick-carousel.scss";
+// @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "./scss/slick-carousel";
+@import "./scss/vars";
+
 * {
 	box-sizing: border-box;
 }
 
-.task__checkbox  {
+.task__checkbox {
 	&--completed {
 		.mat-checkbox-background {
 			background-color: #81C784 !important;
@@ -21,16 +24,31 @@ html {
 	font-size: 16px;
 }
 
-.preloader--main {
-	text-align: center;
-	margin: 0;
-	padding: 100px 0;
+.a-toolbar-margin {
+	flex: 1 1 auto;
+}
+
+.preloader {
+	&__wrap {
+		display: flex;
+		flex-flow: row wrap;
+		justify-content: center;
+		padding-top: 20px;
+		padding-bottom: 20px;
+		width: auto;
+	}
+	&--main {
+		text-align: center;
+		margin: 0;
+		padding: 100px 0;
+	}
+
 }
 
 .content {
-	padding: 100px 0;
-	min-height: 100%;
+	padding: 164px 0;
 	height: 100%;
+	min-height: 100%;
 	&--start {
 		display: flex;
 		align-items: center;
@@ -58,7 +76,12 @@ a {
 	bottom: 0;
 	right: 0;
 	left: 0;
-	z-index: 99;
+	padding: 64px 0;
+	z-index: 1000;
+	.mat-toolbar {
+		position: relative;
+		z-index: 2;
+	}
 	&--open {
 		display: block;
 	}
@@ -88,9 +111,9 @@ a {
 	}
 	&__content {
 		position: relative;
-		margin: 100px auto;
+		margin: 0 auto;
 		background: #fff;
-		padding: 30px;
+		padding: 30px 16px;
 		z-index: 2;
 		border-radius: 2px;
 		box-shadow: 0 11px 15px -7px rgba(0, 0, 0, .2), 0 24px 38px 3px rgba(0, 0, 0, .14), 0 9px 46px 8px rgba(0, 0, 0, .12);
@@ -146,5 +169,16 @@ a {
 	}
 	&__title {
 		text-align: center
+	}
+}
+
+.edit-box {
+	padding: 0 12px;
+	.mat-menu-content {
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	&--desc.mat-menu-panel {
+		width: 400px;
 	}
 }
