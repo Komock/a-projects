@@ -1,8 +1,8 @@
 <div class="modal modal--board">
 	<div class="modal__content">
-		<div class="modal__wrap" [@fadeInAnimation]="board">
+		<div class="modal__wrap">
 			<!-- Toolbar -->
-			<mat-toolbar class="board__toolbar" *ngIf="boardModel" color="primary">
+			<mat-toolbar class="board__toolbar" color="primary" *ngIf="board" @fadeInAnimation>
 				<button mat-button class="board__title" [matMenuTriggerFor]="titleMenu">
 					<h4 class="board__title">
 						<span class="board__title-text">{{board.title | slice:0:20 }}{{board.title.length > 20 ? '...': ''}}</span></h4>
@@ -12,14 +12,15 @@
 					<mat-icon>more_vert</mat-icon>
 				</button>
 			</mat-toolbar>
-			<div class="board__cols" *ngIf="boardModel; else preloader">
+
+			<div class="board__cols" *ngIf="board; else preloader" @fadeInAnimation>
 				<div class="board__col board__task-list">
 					<a-task-list></a-task-list>
 				</div>
 				<div *ngIf="!activeTask" class="board__col board__desc">
 					<!-- Description -->
 					<h4 class="desc-title">Board description:</h4>
-					<form class="desc-form" *ngIf="boardModel" [formGroup]="boardModel">
+					<form class="desc-form" [formGroup]="boardModel">
 						<mat-input-container class="form__input">
 							<textarea matInput mat-autosize minRows="7" name="description" formControlName="description" (change)="updateBoard($event)"></textarea>
 						</mat-input-container>

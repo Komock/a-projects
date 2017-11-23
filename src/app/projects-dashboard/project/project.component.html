@@ -1,41 +1,53 @@
-<div class="modal modal--project modal--white">
+<div class="project">
+	<mat-sidenav-container color="primary">
+		<mat-sidenav [align]="end" #sidenav class="sidenav">
+			<button mat-menu-item (click)="deleteProject(project.$key)">
+				<mat-icon>delete</mat-icon>
+				<span>Delete</span>
+			</button>
+			<button mat-menu-item (click)="openFormAddProject()">
+				<mat-icon>person_add</mat-icon>
+				<span>Add Participant</span>
+			</button>
 
-	<!-- Toolbar -->
-	<mat-toolbar *ngIf="project">
-		<button mat-button class="project__title" [matMenuTriggerFor]="titleMenu">
-			<span class="project__title-text">{{project.title | slice:0:20 }}{{project.title.length > 20 ? '...': ''}}</span>
-		</button>
-		<button mat-icon-button class="btn-edit" title="Description" [matMenuTriggerFor]="descMenu">
-			<mat-icon>short_text</mat-icon>
-		</button>
-		<span class="a-toolbar-margin" flex></span>
-		<button mat-icon-button class="project__menu-btn" [matMenuTriggerFor]="projectMenu">
-			<mat-icon>more_vert</mat-icon>
-		</button>
-	</mat-toolbar>
+		</mat-sidenav>
 
-	<!-- Content -->
-	<div class="modal__content">
-		<div class="project__content" *ngIf="project; else preloader">
-			<div class="project__boards" *ngIf="boards$ | async">
-				
-				<a-board-thumb class="board-thumb" 
-				*ngFor="let board of boards$ | async" [board]="board" 
-				[projectKey]="project.$key" ></a-board-thumb>
+		<!-- Content -->
+		<div class="project__inner">
+
+			<!-- Toolbar -->
+			<mat-toolbar *ngIf="project">
+				<button mat-button class="project__title" [matMenuTriggerFor]="titleMenu">
+					<span class="project__title-text">{{project.title | slice:0:20 }}{{project.title.length > 20 ? '...': ''}}</span>
+				</button>
+				<button mat-icon-button class="btn-edit" title="Description" [matMenuTriggerFor]="descMenu">
+					<mat-icon>short_text</mat-icon>
+				</button>
+				<span flex class="a-toolbar-margin"></span>
+				<button mat-icon-button class="project__menu-btn" (click)="back()">
+					<mat-icon>chevron_left</mat-icon>
+				</button>
+				<button mat-icon-button class="project__menu-btn" (click)="sidenav.open()">
+					<mat-icon>more_vert</mat-icon>
+				</button>
+			</mat-toolbar>
+
+			<!-- Project Content -->
+			<div class="project__content" *ngIf="project; else preloader">
+				<div class="project__boards" *ngIf="boards$ | async">
+					<a-board-thumb class="board-thumb" *ngFor="let board of boards$ | async" [boardAction]="board" [projectKey]="projectKey"></a-board-thumb>
+				</div>
 			</div>
-			<!-- Participants Form -->
-			<a-form-add-participants [project$]="firebaseProject"></a-form-add-participants>
 		</div>
-	</div>
 
-	<!-- Add Board -->
-	<a mat-fab color="primary" class="btn-add-board" (click)="addBoard()">
-		<mat-icon>add</mat-icon>
-	</a>
-
-	<div class="modal__overlay"></div>
+		<!-- Add Board -->
+		<a mat-fab color="primary" class="btn-add-board" (click)="addBoard()">
+			<mat-icon>add</mat-icon>
+		</a>
+	</mat-sidenav-container>
 </div>
 
+<!-- Router Outlet -->
 <router-outlet></router-outlet>
 
 <!-- Title menu -->
@@ -57,12 +69,12 @@
 </mat-menu>
 
 <!-- Project menu -->
-<mat-menu #projectMenu="matMenu" class="project__menu" [overlapTrigger]="false">
+<!-- <mat-menu #projectMenu="matMenu" class="project__menu" [overlapTrigger]="false">
 	<button mat-menu-item (click)="deleteProject(project.$key)">
 		<mat-icon>delete</mat-icon>
 		<span>Delete</span>
 	</button>
-</mat-menu>
+</mat-menu> -->
 
 <!-- Preloader -->
 <ng-template #preloader>

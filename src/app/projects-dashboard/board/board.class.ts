@@ -1,4 +1,4 @@
-import { Task } from '../task/task.class';
+import { Task } from './task-list/task/task.class';
 export class Board {
 	public title: string;
 	public description?: string;

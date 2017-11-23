@@ -6,10 +6,13 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ShouldVerifyEmailComponent } from './should-verify-email/should-verify-email.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 // Services
 import { ProjectsPanelGuardService } from './projects-dashboard/projects-panel-guard.service';
-import { SigninGuardService } from './sign-in/signin-guard.service';
+import { AuthGuardService } from './auth-guard.service';
+import { VerifyEmailGuardService } from './verify-email-guard.service';
+import { UserGuardService } from './user-guard.service';
 
 
 export const routes: Route[] = [{
@@ -18,27 +21,32 @@ export const routes: Route[] = [{
 	data: { title: 'Start your Project today!' }
 }, {
 	path: 'signup',
-	canActivate: [SigninGuardService],
+	canActivate: [VerifyEmailGuardService, UserGuardService],
 	component: SignUpComponent,
 	data: { title: 'Sign Up' }
 }, {
 	path: 'signin',
-	canActivate: [SigninGuardService],
+	canActivate: [VerifyEmailGuardService, UserGuardService],
 	component: SignInComponent,
 	data: { title: 'Sign In' }
 }, {
 	path: 'profile',
-	// canActivate: [SigninGuardService],
+	canActivate: [AuthGuardService],
 	component: ProfileComponent,
 	data: { title: 'Profile' }
 }, {
 	path: 'should-verify-email',
-	canActivate: [SigninGuardService],
+	canActivate: [AuthGuardService, UserGuardService],
 	component: ShouldVerifyEmailComponent,
 	data: { title: 'Verify e-mail' }
 }, {
+	path: 'verify-email',
+	canActivate: [AuthGuardService, UserGuardService],
+	component: VerifyEmailComponent,
+	data: { title: 'Verification' }
+}, {
 	path: 'projects',
-	canActivate: [ProjectsPanelGuardService],
+	canActivate: [AuthGuardService, VerifyEmailGuardService],
 	loadChildren: 'app/projects-dashboard/projects-dashboard.module#ProjectsDashboardModule'
 }, {
 	path: '**',

@@ -6,15 +6,15 @@ import { ModalService } from '../../modal.service';
 import { ProjectsService } from '../../projects.service';
 import { UserService } from '../../user.service';
 
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { FirebaseApp } from 'angularfire2';
 import * as firebase from 'firebase/app';
 import 'firebase/storage';
 
 import { Observable } from 'rxjs/Observable';
 
-import { Task } from '../task/task.class';
-import { TaskComponent } from '../task/task.component';
+import { Task } from '../board/task-list/task/task.class';
+import { TaskComponent } from '../board/task-list/task/task.component';
 
 @Component({
 	selector: 'a-form-add-project',
@@ -28,7 +28,7 @@ export class FormAddProjectComponent implements OnInit {
 	public fileUploadError: string;
 	public thumbBg: SafeStyle;
 	public thumbLoading: boolean = false;
-	public projects: FirebaseListObservable<Project[]>;
+	public projects: AngularFireList<Project[]>;
 
 	private user: firebase.User;
 
@@ -62,7 +62,8 @@ export class FormAddProjectComponent implements OnInit {
 
 	public onSubmit(e: Event): void {
 		e.preventDefault();
-		this._projectsService.addProject(this.user.uid, this.project);
+		this._projectsService.addProject(this.project);
+		this.project.title = '';
 		this._modalService.close();
 		// if (this.thumbFile) {
 		// 	const uploadTask: firebase.storage.UploadTask = this.uploadThumb();
@@ -92,7 +93,7 @@ export class FormAddProjectComponent implements OnInit {
 				this.project = new Project({
 					title: '',
 					description: '',
-					ownerId: this.user.uid
+					authorId: this.user.uid
 				});
 			});
 	}

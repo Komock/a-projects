@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { ProjectsService } from '../../../projects.service';
-import { Task } from '../../task/task.class';
+import { Task } from '../task-list/task/task.class';
 
 @Component({
 	selector: 'a-task-actions',

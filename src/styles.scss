@@ -78,12 +78,19 @@ a {
 	left: 0;
 	padding: 64px 0;
 	z-index: 1000;
+	transition: 0.3s;
 	.mat-toolbar {
 		position: relative;
 		z-index: 2;
 	}
 	&--open {
 		display: block;
+		visibility: hidden;
+		opacity: 0;
+	}
+	&--show {
+		visibility: visible;
+		opacity: 1;
 	}
 	&__overlay {
 		background: #000;

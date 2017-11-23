@@ -1,4 +1,4 @@
-<mat-list-item class="task" ngClass="{{'task--' + task.status}}">
+<mat-list-item *ngIf="task" class="task" [ngClass]="taskStateClasses">
 	<mat-checkbox class="task__checkbox" ngClass="{{'task__checkbox--' + task.status}}" color="primary" [id]="index" (change)="changeStatus($event)" [checked]="task.status == 'completed'"></mat-checkbox>
 	<mat-input-container>
 		<input matInput class="task__input" name="task" attr.data-task-index="{{index+1}}" value="{{task.title}}" (change)="updateTitle($event)" (keyup)="updateTaskActionsTitle($event)" (focus)="showTaskActions()">

@@ -2,46 +2,29 @@
 
 :host {
 	display: block;
-	position: relative;
+	position: fixed;
+	top: 64px;
+	bottom: 0;
+	left: 0;
+	right: 0;
 	z-index: 10;
 }
 
-.modal {
-	&--project {
-		display: block;
+mat-sidenav-container {
+	height: 100%;
+	min-height: 100%;
+}
+
+.project {
+	height: 100%;
+	min-height: 100%;
+	&__inner {
+		height: 100%;
+		min-height: 100%;
 	}
 	&__content {
-		padding-top: 15px;
+		padding: 16px 16px 0;
 	}
-	&__wrap {
-		max-width: 1000px;
-	}
-}
-
-.mat-spinner {
-	width: 40px;
-	height: 100px;
-	margin: 45px auto;
-}
-
-.close {
-	position: absolute;
-	top: 24px;
-	right: 24px;
-}
-
-// .btn-edit {
-// 	margin-left: 4px;
-// 	.mat-icon,
-// 	.mat-icon-button {
-// 		height: 30px;
-// 		width: 30px;
-// 		line-height: 30px;
-// 		font-size: 18px;
-// 		color: $clr-gray;
-// 	}
-// }
-.project {
 	&__title {
 		margin: 0;
 		font-weight: 700;
@@ -53,23 +36,27 @@
 		display: flex;
 		flex-flow: row wrap;
 		margin: 0 -8px;
-	} //======= move
-	&__cols {
-		display: flex;
-		flex-flow: row wrap;
-		justify-content: space-between;
-	}
-	&__col {
-		width: calc(50% - 20px);
-	}
-
-	&__task-list {
-		margin-top: 16px;
-	}
-	&__btn-add-task {
-		width: 100%;
-	} // ============
+	} 
 }
+
+.sidenav {
+	width: 240px;
+	&__item {
+		border-bottom: 1px solid #eee;
+	}
+	&__btn {
+		width: 100%;
+		border-radius: 0;
+	}
+	.mat-list-item-content {
+		padding: 0;
+	}
+	.mat-menu-item {
+		height: 50px;
+	}
+}
+
+
 
 .board-thumb {
 	width: 25%;
@@ -90,6 +77,10 @@
     bottom: 20px;
     right: 20px;
     z-index: 2;
+}
+
+.mat-spinner {
+	margin: 45px auto;
 }
 
 

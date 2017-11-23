@@ -1,0 +1,21 @@
+<div class="content">
+	<div class="wrap">
+		<div class="verify-email">
+			<div class="verify-email__msg" *ngIf="showProcessMsg" @fadeInAnimation>
+				<!-- Preloader -->
+				<div class="preloader__wrap">
+					<mat-spinner [diameter]="45" [strokeWidth]="3"></mat-spinner>
+				</div>
+				<p>E-mail verification...</p>
+			</div>
+			<div class="verify-email__msg" *ngIf="showSuccessMsg" @fadeInUpAnimation>
+				<p class="verify-email__msg-ok">
+					<mat-icon color="primary" class="verify-email__icon-ok">done</mat-icon> <span>E-mail verified!</span></p>
+				<p>
+					<button mat-raised-button color="primary" routerLink="/projects">Projects</button>
+				</p>
+			</div>
+		</div>
+
+	</div>
+</div>

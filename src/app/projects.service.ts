@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject, AngularFireAction } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 // Services
@@ -8,20 +8,22 @@ import { UserService } from './user.service';
 // Classes
 import { Project } from './projects-dashboard/project/project.class';
 import { Board } from './projects-dashboard/board/board.class';
-import { Task } from './projects-dashboard/task/task.class';
+import { Task } from './projects-dashboard/board/task-list/task/task.class';
 
 // RX
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/zip';
+import 'rxjs/add/observable/forkJoin';
 
 @Injectable()
 export class ProjectsService {
 	public user: firebase.User;
-	public projects$: FirebaseListObservable<Project[]>;
-	public tasks$: FirebaseListObservable<Task[]>;
+	public projects$: AngularFireList<Project>;
+	public tasks$: AngularFireList<Task>;
 	public currentProjectKey: string;
 	public currentBoardKey: string;
+	public currentTaskKey: string;
 	public activeTask$$: Subject< Task | null> = new Subject();
 
 	public constructor(
@@ -41,14 +43,16 @@ export class ProjectsService {
 				return `projects/${uid}`;
 			case 'project':
 				return `projects/${uid}/${this.currentProjectKey}`;
+			case 'boards':
+				return `boards/${uid}/${this.currentProjectKey}`;
+			case 'board':
+				return `boards/${uid}/${this.currentProjectKey}/${this.currentBoardKey}`;
+			case 'tasks':
+				return `tasks/${uid}/${this.currentBoardKey}`;
+			case 'task':
+				return `tasks/${uid}/${this.currentBoardKey}/${this.currentTaskKey}`;
 			case 'participants':
 				return `projects/${uid}/${this.currentProjectKey}/participants`;
-			case 'boards':
-				return `projects/${uid}/${this.currentProjectKey}/boards`;
-			case 'board':
-				return `projects/${uid}/${this.currentProjectKey}/boards/${this.currentBoardKey}`;
-			case 'tasks':
-				return `projects/${uid}/${this.currentProjectKey}/boards/${this.currentBoardKey}/tasks`;
 			default:
 				return 'Path error!';
 		}
@@ -56,81 +60,87 @@ export class ProjectsService {
 
 
 	// ==== Projects Actions
-	public getProjects(): FirebaseListObservable<Project[]> {
+	public getProjects(): AngularFireList<Project> {
 		this.projects$ = this._db.list(this.dataPath('projects'));
 		return this.projects$;
 	}
 
-	public getCollectiveProjects(projectsObj: {[key: string]: any}): Observable<Project[]> {
-		const projectsObservablesArr: FirebaseObjectObservable<Project>[] = [];
-		Object.keys(projectsObj)
+	public getCollectiveProjects(collectiveProjectsObj: {[key: string]: any}): Observable<AngularFireAction<any>[]> {
+		const projectsObservablesArr: Observable<AngularFireAction<any>>[] = [];
+		Object.keys(collectiveProjectsObj)
 			.forEach((key: string) => {
-				const projectObservable$: FirebaseObjectObservable<Project> = this._db
-					.object(`projects/${key}/${projectsObj[key]}`);
-				projectsObservablesArr.push(projectObservable$);
+				const project$: Observable<AngularFireAction<any>> = this._db
+					.object(`projects/${collectiveProjectsObj[key].ownerUid}/${key}`).snapshotChanges();
+				projectsObservablesArr.push(project$);
 			});
 		return Observable.zip(...projectsObservablesArr);
 	}
 
-	public getParticipants(): FirebaseListObservable<{ uid: string }[]> {
+	public getParticipants(): AngularFireList<Participant> {
 		return this._db.list(this.dataPath('participants'));
 	}
 
-	public addParticipant(participant: Participant): firebase.Promise<void> {
+	public addParticipant(participant: Participant): firebase.database.ThenableReference {
 		return this.getParticipants().push(participant);
 	}
 
 
 	// ==== Single Project Actions
-	public getProject(): FirebaseObjectObservable<Project> {
+	public getProject(): AngularFireObject<Project> {
 		return this._db.object(this.dataPath('project'));
 	}
 
-	public addProject(uid: string, project: Project): void {
+	public addProject(project: Project): void {
 		this.getProjects().push(project)
 			.then((projRef: any) => { // Add First Board
+				this.currentProjectKey = projRef.key;
 				this.getBoards().push(new Board({ title: 'First board'}));
+				this.currentProjectKey = '';
 			});
 	}
 
-	public deleteProject(uid: string, key: string): firebase.Promise<void> {
-		return this.getProjects().remove(key);
+	public deleteProject(key: string): Observable<any[]> {
+		return Observable.forkJoin([
+			this.getProject().remove(),
+			this.getBoards().remove(),
+			this.getTasks().remove()
+		]);
 	}
 
 	// ==== Boards Actions
-	public getBoards(): FirebaseListObservable<Board[]> {
+	public getBoards(): AngularFireList<Board> {
 		return this._db.list( this.dataPath('boards') );
 	}
 
 	// ==== Single Board Actions
-	public getBoard(): FirebaseObjectObservable<Board> {
+	public getBoard(): AngularFireObject<Board> {
 		return this._db.object(this.dataPath('board'));
 	}
 
-	public addBoard(board: Board): firebase.Promise<void> {
+	public addBoard(board: Board): firebase.database.ThenableReference {
 		return this.getBoards().push(board);
 	}
 
-	public deleteBoard(key: string): firebase.Promise<void> {
-		return this.getBoards().remove(key);
+	public deleteBoard(key: string): Observable<any[]> {
+		return Observable.forkJoin([ this.getBoard().remove(), this.getTasks().remove() ]);
 	}
 
 
 	// ==== Tasks Actions
-	public getTasks(): FirebaseListObservable<Task[]> {
+	public getTasks(): AngularFireList<Task> {
 		return this._db.list(this.dataPath('tasks'));
 	}
 
-	public deleteTask(key: string): firebase.Promise<void> {
+	public deleteTask(key: string): Promise<void> {
 		return this.getTasks().remove(key);
 	}
 
 	// ==== Single Task Actions
-	public getTask(key: string): FirebaseObjectObservable<Task[]> {
+	public getTask(key: string): AngularFireObject<Task> {
 		return this._db.object(`${this.dataPath('tasks')}/${key}`);
 	}
 
-	public updateTask(key: string, upd: any): firebase.Promise<void> {
+	public updateTask(key: string, upd: any): Promise<void> {
 		return this.getTask(key).update(upd);
 	}
 

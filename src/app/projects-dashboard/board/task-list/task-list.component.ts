@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import {AnimationTriggerMetadata, trigger, transition, style, animate, query} from '@angular/animations';
-import { FirebaseListObservable } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 // Services
@@ -12,9 +11,12 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import 'rxjs/add/operator/switchMap';
 
+// FB
+import { AngularFireAction } from 'angularfire2/database';
+
 // Classes
 import { Project } from '../../project/project.class';
-import { Task } from '../../task/task.class';
+import { Task } from './task/task.class';
 
 const taskAnimation: any =
 	trigger('taskAnimation', [
@@ -65,9 +67,8 @@ export class TaskListComponent implements OnInit {
 
 	// ====== Task Actions
 	public addTask(): void {
-		const task: Task = new Task({ title: 'New Task'});
-		this._projectsService.getTasks().push(task)
-			.catch(this.errorHandler);
+		this._projectsService.getTasks()
+			.push(new Task({ title: 'New Task'}));
 	}
 
 	public filterTaskList(e: any): void {
@@ -82,10 +83,20 @@ export class TaskListComponent implements OnInit {
 		this._userService.user$
 			.switchMap((user: firebase.User) => {
 				this.user = user;
-				return this._projectsService.getTasks();
+				return this._projectsService.getTasks().snapshotChanges();
+			})
+			.map((tasksActions: AngularFireAction<any>[]) => {
+				const tasks: Task[] = [];
+				tasksActions.forEach((action: AngularFireAction<any>) => {
+					const task: Task = action.payload.val();
+					task.$key = action.payload.key;
+					tasks.push(task);
+				});
+				return tasks;
 			})
 			.subscribe((tasks: Task[]) => {
 				this.fullTaskList = tasks.slice();
+				this.msg = '';
 				if (this.selectedStatus === 'all') {
 					this.taskList = tasks;
 				} else {
@@ -96,7 +107,6 @@ export class TaskListComponent implements OnInit {
 					this.msg = 'No tasks added yet';
 					return;
 				}
-				this.msg = '';
 			});
 		this._projectsService.activeTask$$
 			.subscribe((task: Task) => {

@@ -2,7 +2,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { RouterModule }   from '@angular/router';
-import { HttpClientModule, HttpClient }   from '@angular/common/http';
+import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS }   from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BaseRequestOptions, HttpModule } from '@angular/http';
@@ -20,16 +20,24 @@ import { SignInComponent } from './sign-in/sign-in.component';
 import { SignUpComponent } from './sign-up/sign-up.component';
 import { SlickCarouselComponent } from './slick-carousel/slick-carousel.component';
 import { SlickCarouselItemDirective } from './slick-carousel/slick-carousel-item.directive';
+import { ShouldVerifyEmailComponent } from './should-verify-email/should-verify-email.component';
+import { ProfileComponent } from './profile/profile.component';
+import { VerifyEmailComponent } from './verify-email/verify-email.component';
 
 // Services
 import { TitleService } from './title.service';
 import { ProjectsService } from './projects.service';
 import { TaskListService } from './task-list.service';
 import { UserService } from './user.service';
+import { TokenInterceptor } from './token.interceptor';
 import { ModalService } from './modal.service';
-import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { ProjectsPanelGuardService } from './projects-dashboard/projects-panel-guard.service';
-import { SigninGuardService } from './sign-in/signin-guard.service';
+import { AuthGuardService } from './auth-guard.service';
+import { UserGuardService } from './user-guard.service';
+import { VerifyEmailGuardService } from './verify-email-guard.service';
+
+// Directives
 
 
 // Config
@@ -37,9 +45,6 @@ import { DOMAIN, DOMAIN_TOKEN, FIREBASE } from '../../config';
 
 // Routes
 import { routes } from './app.routes';
-import { ShouldVerifyEmailComponent } from './should-verify-email/should-verify-email.component';
-import { ProfileComponent } from './profile/profile.component';
-
 
 @NgModule({
 	declarations: [
@@ -52,7 +57,10 @@ import { ProfileComponent } from './profile/profile.component';
 		SlickCarouselComponent,
 		SlickCarouselItemDirective,
 		ShouldVerifyEmailComponent,
-		ProfileComponent
+		ProfileComponent,
+		VerifyEmailComponent,
+
+		// Directives
 	],
 	imports: [
 		BrowserModule,
@@ -71,6 +79,12 @@ import { ProfileComponent } from './profile/profile.component';
 			provide: DOMAIN_TOKEN,
 			useValue: DOMAIN
 		},
+		{
+			provide: HTTP_INTERCEPTORS,
+			useClass: TokenInterceptor,
+			multi: true
+
+		},
 		HttpClient,
 		TitleService,
 		ProjectsService,
@@ -79,7 +93,9 @@ import { ProfileComponent } from './profile/profile.component';
 		ModalService,
 		AngularFireDatabase,
 		ProjectsPanelGuardService,
-		SigninGuardService
+		AuthGuardService,
+		UserGuardService,
+		VerifyEmailGuardService
 	],
 	bootstrap: [AppComponent]
 })

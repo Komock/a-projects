@@ -4,24 +4,28 @@
 			<mat-tab-group>
 				<!-- Own Projects -->
 				<mat-tab label="Own Projects">
-					<p class="projects-panel__msg" *ngIf="msg" @fadeInUpAnimation>{{ msg }}</p>
 					<!-- Preloader -->
 					<div class="preloader__wrap" *ngIf="!hiddeSpiner">
 						<mat-spinner [diameter]="45" [strokeWidth]="3"></mat-spinner>
 					</div>
 					<div class="projects-list" *ngIf="projects">
-						<a-project-thumb *ngFor="let project of projects | reverse" [project]="project" [isShared]="false"></a-project-thumb>
+						<a-project-thumb *ngFor="let project of projects | reverse" [projectAction]="project" [isShared]="false"></a-project-thumb>
+					</div>
+					<!-- MSG no projects -->
+					<div class="projects-panel__msg" *ngIf="msg" @fadeInUpAnimation>
+						<p>{{ msg }}</p>
+						<p><button mat-raised-button color="primary" (click)="openFormAddProject()">Add Project</button></p>
 					</div>
 				</mat-tab>
 				<!-- Collective Projects -->
-				<mat-tab label="Collective Projects" *ngIf="collectiveProjects | async">
+				<mat-tab label="Collective Projects" *ngIf="collectiveProjects$">
 					<div class="projects-list">
-						<a-project-thumb *ngFor="let cProject of collectiveProjects | async;" [project]="cProject" [isShared]="true"></a-project-thumb>
+						<a-project-thumb *ngFor="let cProject of collectiveProjects$ | async;" [projectAction]="cProject" [isShared]="true"></a-project-thumb>
 					</div>
 				</mat-tab>
-				<p>{{collectiveProjects}}</p>
+				
 			</mat-tab-group>
-			<a mat-fab color="primary" class="btn-add-project" (click)="openFormAddProject()">
+			<a mat-fab color="primary" class="btn-add-project" *ngIf="projects?.length" @fadeInUpAnimation (click)="openFormAddProject()" >
 				<mat-icon>add</mat-icon>
 			</a>
 			<router-outlet></router-outlet>

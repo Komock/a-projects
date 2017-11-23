@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute, Params } from '@angular/router';
+import { Router } from '@angular/router';
+
+// Firebase
+import * as firebase from 'firebase/app';
 
 @Component({
 	selector: 'a-should-verify-email',
@@ -8,14 +11,9 @@ import { Router, ActivatedRoute, Params } from '@angular/router';
 })
 export class ShouldVerifyEmailComponent implements OnInit {
 	public constructor(
-		private _router: Router,
-		private _activatedRoute: ActivatedRoute
-		) { }
+		private _router: Router
+	) {}
 	public ngOnInit(): void {
-		this._activatedRoute.params
-			.subscribe((params: Params) => {
-				console.log('params: ', params);
-			});
+		
 	}
-
 }

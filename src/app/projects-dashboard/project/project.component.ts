@@ -1,16 +1,21 @@
-import { Component, HostListener, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Project } from './project.class';
 
 // Firebase
 import * as firebase from 'firebase/app';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject,
+	SnapshotAction, AngularFireAction, DatabaseSnapshot } from 'angularfire2/database';
 
 // Services
 import { TitleService } from '../../title.service';
 import { ProjectsService } from '../../projects.service';
 import { UserService } from '../../user.service';
+import { ModalService } from '../../modal.service';
+
+// Components
+import { FormAddParticipantsComponent } from './form-add-participants/form-add-participants.component';
 
 // RX
 import { Observable } from 'rxjs/Observable';
@@ -22,10 +27,7 @@ import { fadeInUpAnimation } from '../../_animations/fade-in-up.animation';
 import { fadeInAnimation } from '../../_animations/fade-in.animation';
 
 // Classes
-import { Task } from '../task/task.class';
 import { Board } from '../board/board.class';
-
-import { AnimationTriggerMetadata, trigger, transition, style, animate, query } from '@angular/animations';
 
 
 @Component({
@@ -36,12 +38,13 @@ import { AnimationTriggerMetadata, trigger, transition, style, animate, query } 
 	host: { '[@fadeInAnimation]': '' }
 })
 export class ProjectComponent implements OnInit, OnDestroy {
-	public project: any;
+	public project: Project;
+	public projectKey: string;
 	public projectSubscription: Subscription;
-	public boards$: FirebaseListObservable<Board[]>;
+	public boards$: Observable<any[]>;
 	public userDataSubscription: Subscription;
 	public user: firebase.User;
-	public firebaseProject: FirebaseObjectObservable<Project>;
+	public project$: Observable<AngularFireAction<any>>;
 	public formModel: FormGroup;
 	public tasksArray: FormArray;
 
@@ -51,6 +54,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
 		private _formBuilder: FormBuilder,
 		private _projectsService: ProjectsService,
 		private _userService: UserService,
+		private _modalService: ModalService,
 		private _titleService: TitleService,
 		private _db: AngularFireDatabase,
 	) {}
@@ -63,19 +67,10 @@ export class ProjectComponent implements OnInit, OnDestroy {
 		this._router.navigate(['projects']);
 	}
 
-	// @HostListener('window:keyup', ['$event.keyCode'])
-	// public escBack(code: number = 27): void {
-	// 	if (code !== 27) {
-	// 		return;
-	// 	}
-	// 	this.back();
-	// }
-
-
 	// ==== Project Actions ==== //
 	public deleteProject(key: string): void {
 		this._router.navigate(['projects']);
-		this._projectsService.deleteProject(this.user.uid, key);
+		this._projectsService.deleteProject(key);
 	}
 
 	public updateProject(e: Event | any): void {
@@ -91,8 +86,15 @@ export class ProjectComponent implements OnInit, OnDestroy {
 		if (!this.project.boards) {
 			this.project.boards = [];
 		}
-		console.log(Board);
 		this._projectsService.addBoard(new Board({ title: 'New Board!'}));
+	}
+
+	public openFormAddProject(): void {
+		this._modalService.open({
+			component: FormAddParticipantsComponent,
+			modalClass: 'modal--white',
+			context: {}
+		});
 	}
 
 	public ngOnInit(): void {
@@ -102,7 +104,6 @@ export class ProjectComponent implements OnInit, OnDestroy {
 			description: ['', []]
 		});
 
-
 		// ==== Load Project ==== //
 		this.userDataSubscription = this._userService.userExtraData$
 			.switchMap((user: firebase.User) => {
@@ -111,19 +112,20 @@ export class ProjectComponent implements OnInit, OnDestroy {
 			})
 			.subscribe((params: Params) => {
 				this._projectsService.currentProjectKey = params.key;
-				this.firebaseProject = this._projectsService.getProject();
-				this.boards$ = this._projectsService.getBoards();
-				this.projectSubscription = this.firebaseProject
-					.subscribe((project: Project) => {
-						if (!(project as any).$exists()) {
+				this.project$ = this._projectsService.getProject().snapshotChanges();
+				this.boards$ = this._projectsService.getBoards().snapshotChanges();
+				this.projectSubscription = this.project$
+					.subscribe((action: AngularFireAction<any>) => {
+						if (!action) {
 							this._router.navigate(['projects']);
 							return;
 						}
+						this.project = action.payload.val(); // Store Project
+						this.projectKey = action.payload.key;
 						this.formModel.patchValue({
-							title: project.title,
-							description: project.description
+							title: this.project.title,
+							description: this.project.description
 						});
-						this.project = project; // Store Project
 					});
 			});
 	}

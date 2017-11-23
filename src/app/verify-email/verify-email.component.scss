@@ -1,0 +1,22 @@
+:host {
+	display: block;
+}
+
+.verify-email {
+	&__msg {
+		text-align: center;
+		max-width: 300px;
+		margin: 0 auto;
+	}
+	&__msg-ok {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: row;
+	}
+	&__icon-ok {
+		margin-right: 10px;
+		margin-top: -10px;
+		font-size: 30px;
+	}
+}

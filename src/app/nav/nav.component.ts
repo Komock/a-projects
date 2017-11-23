@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { UserService } from '../user.service';
 
 // FB
-import { FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireObject } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 import { Observable } from 'rxjs/Observable';

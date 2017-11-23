@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, Inject, Input } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit, OnDestroy, Inject, Input, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
 import { Response } from '@angular/http';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../../user.service';
@@ -12,12 +12,15 @@ import { Subscription } from 'rxjs/Subscription';
 
 // Firebase
 import * as firebase from 'firebase/app';
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
 
 // Animations
 import { fadeInAnimation } from '../../../_animations/fade-in.animation';
 
+// Config
 import { DOMAIN_TOKEN } from '../../../../../config';
+
+// Validators
+import { emailValidator } from '../../../_validators/email-validator';
 
 @Component({
 	selector: 'a-form-add-participants',
@@ -27,23 +30,21 @@ import { DOMAIN_TOKEN } from '../../../../../config';
 })
 export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 	public formModel: FormGroup;
+	@ViewChild('f') public formDir: any;
 	public participantMail: string;
 	public msg: string;
 	public user: firebase.User;
-	public projectId: string;
-	public participants: firebase.User[] = [];
+	public participants$: Observable<Participant[]>;
 	public projectSubscription: Subscription;
-	@Input()
-	public project$: FirebaseObjectObservable<Project>;
-
+	public userSubscription: Subscription;
+	@Input() public projectKey: string;
 
 	public constructor(
 		@Inject(DOMAIN_TOKEN) private _domain: string,
 		private _httpClient: HttpClient,
 		private _userService: UserService,
 		private _projectsService: ProjectsService,
-		private _formBuilder: FormBuilder,
-		private _db: AngularFireDatabase
+		private _formBuilder: FormBuilder
 	) {}
 
 	public onSubmit(e: Event): void | false {
@@ -56,65 +57,48 @@ export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 			return false;
 		}
 
-		this.user.getIdToken().then((token: string) => { // Authorize Custom API by Token
-			const body: any = {
-				uid: this.user.uid,
-				projectId: this.projectId,
-				email: this.formModel.controls.email.value
-			};
-			this._httpClient.post(
-					`${this._domain}api/add-participant`,
-					body,
-					{ headers: new HttpHeaders().set( 'Authorization', token )} )
-				.catch((response: HttpErrorResponse) => {
-					return Observable.of({error: response.statusText});
-				})
-				.subscribe((data: any) => {
-					console.log('Participant: ', data);
-					if (!data) {
-						this.msg = 'No user with this e-mail.';
-						setTimeout(() => { this.msg = ''; }, 3000); // Hide MSG
-					} else if (data.error) {
-						this.msg = 'Something went wrong. Pleace try later.';
-					} else {
-						// const user: User = data[ Object.keys(data)[0] ];
-						// this._projectsService.addParticipant({
-						// 		participantUid: user.uid,
-						// 		email: user.email,
-						// 		displayName: user.displayName || '',
-						// 		photoURL: user.photoURL || ''
-						// 	}).catch(this.errorHandler);
-					}
-				});
-			this.participantMail = '';
-		});
+		const body: any = {
+			ownerUid: this.user.uid,
+			projectKey: this._projectsService.currentProjectKey,
+			email: this.formModel.controls.email.value
+		};
+		this._httpClient.post(`${this._domain}api/add-participant`, body)
+			.catch((response: HttpErrorResponse) => {
+				return Observable.of({error: response.statusText});
+			})
+			.subscribe((data: any) => {
+				if (data.msg) {
+					this.msg = 'No user with this e-mail.';
+					setTimeout(() => { this.msg = ''; }, 3000); // Hide MSG
+					return;
+				}
+				if (data.error) {
+					this.msg = 'Something went wrong. Pleace try later.';
+					this.errorHandler(data.error);
+					setTimeout(() => { this.msg = ''; }, 3000); // Hide MSG
+					return;
+				}
+				if (data.uid) {
+					this.msg = 'User added!';
+					setTimeout(() => { this.msg = ''; }, 3000); // Hide MSG
+				}
+			});
+		this.formModel.reset();
+		this.formDir.resetForm();
+		// this.formModel.controls['email'].setErrors(null); // Hack
 	}
 
 	public ngOnInit(): void {
+		this.participants$ = this._projectsService.getParticipants().valueChanges();
 		this.formModel = this._formBuilder.group({
-			email: ['', [Validators.required, Validators.minLength(4)]],
+			email: ['', [Validators.required, Validators.minLength(4)], emailValidator ], // emailValidator
 		});
-
-		this._userService.user$
-			.subscribe((user: firebase.User) => {
-				this.user = user;
-			});
-
-		this.projectSubscription = this.project$
-			.subscribe((project: Project) => {
-				this.projectId = project.$key; // Get Project key
-				if (project.participants) {
-					// const participants: firebase.User[] = [];
-					for (const key of Object.keys(project.participants)) {
-						this.participants.push(project.participants[key]);
-					}
-					// this.participants = participants;
-				}
-			});
+		this.userSubscription = this._userService.user$
+			.subscribe((user: firebase.User) => this.user = user );
 	}
 
 	public ngOnDestroy(): void {
-		this.projectSubscription.unsubscribe();
+		this.userSubscription.unsubscribe();
 	}
 
 	private errorHandler(err: Error): void {

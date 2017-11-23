@@ -1,16 +1,11 @@
 {
-	"rules":
-	{
-		"users":
-		{
-			"$uid":
-			{
+	"rules": {
+		"users": {
+			"$uid": {
 				".read": "auth.uid == $uid",
 				".write": "auth.uid == $uid",
-				"collectiveProjects":
-				{
-					"$colProjId":
-					{
+				"collectiveProjects": {
+					"$colProjId": {
 						".read": true,
 						".write": false
 					}
@@ -18,12 +13,26 @@
 			},
 			".indexOn": ["email"]
 		},
-		"projects":
-		{
-			"$projectsId":
-			{
-				".read": "auth.uid == $projectsId || root.child('users').child(auth.uid).child('collectiveProjects').hasChild($projectsId)",
-				".write": "auth.uid == $projectsId"
+		"projects": {
+			"$projectsId": {
+				".read": "auth.uid == $projectsId",
+				".write": "auth.uid == $projectsId",
+				"$projId": {
+					".read": "root.child('users').child(auth.uid).child('collectiveProjects').hasChild($projId)",
+					".write": true
+				}
+			}
+		},
+		"boards": {
+			"$boardsId": {
+				".read": "auth.uid == $boardsId",
+				".write": "auth.uid == $boardsId",
+			}
+		},
+		"tasks": {
+			"$tasksId": {
+				".read": "auth.uid == $tasksId",
+				".write": "auth.uid == $tasksId",
 			}
 		}
 	}

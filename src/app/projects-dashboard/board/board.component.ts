@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
 import { Router, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
-import { AngularFireDatabase, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import * as firebase from 'firebase/app';
 
@@ -20,7 +20,7 @@ import { fadeInAnimation } from '../../_animations/fade-in.animation';
 // Classes
 import { Project } from '../project/project.class';
 import { Board } from '../board/board.class';
-import { Task } from '../task/task.class';
+import { Task } from './task-list/task/task.class';
 
 @Component({
 	selector: 'a-board',
@@ -83,14 +83,14 @@ export class BoardComponent implements OnInit, OnDestroy {
 			})
 			.switchMap((user: firebase.User) => {
 				this.user = user;
-				return this._projectsService.getBoard();
+				return this._projectsService.getBoard().valueChanges();
 			})
 			.subscribe((board: Board) => {
-				this.board = board;
 				this.boardModel = this._formBuilder.group({
 					title: [board.title, [Validators.required, Validators.minLength(4)]],
 					description: [board.description || '', []]
 				});
+				this.board = board;
 			});
 
 			this._projectsService.activeTask$$

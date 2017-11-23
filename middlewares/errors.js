@@ -4,12 +4,13 @@ exports.init = App => {
 			await next();
 		} catch (err) {
 			console.log('Error name: ', err.name);
+			console.dir(err);
 			if (err.status) {
-				ctx.body = err.message;
+				ctx.body = { error: err.message };
 				ctx.status = err.status;
 				return;
 			}
-			ctx.body = 'Error 500';
+			ctx.body = { error: 'Error 500' };
 			ctx.status = 500;
 			console.error(err.message, err.stack);
 		}

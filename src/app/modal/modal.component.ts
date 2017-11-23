@@ -3,11 +3,13 @@ import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef,
 
 import { ModalService } from '../modal.service';
 import { FormAddProjectComponent } from '../projects-dashboard/form-add-project/form-add-project.component';
+import { FormAddParticipantsComponent } from
+'../projects-dashboard/project/form-add-participants/form-add-participants.component';
 
 @Component({
 	selector: 'a-modal',
 	templateUrl: './modal.component.html',
-	entryComponents: [ FormAddProjectComponent ],
+	entryComponents: [ FormAddProjectComponent, FormAddParticipantsComponent ],
 	styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent implements OnInit {
@@ -17,6 +19,7 @@ export class ModalComponent implements OnInit {
 	public modalClass: string = '';
 	public childComponent: ComponentFactory<any>;
 	public isOpen: string = '';
+	public isShow: string = '';
 	public modalContext: ComponentRef<any>;
 
 	public constructor(
@@ -32,6 +35,9 @@ export class ModalComponent implements OnInit {
 					return;
 				}
 				this.isOpen = 'modal--open';
+				setTimeout(() => {
+					this.isShow = 'modal--show';
+				}, 20);
 				this.modalClass = componentObj.modalClass;
 				this.childComponent = this._componentFactoryResolver.resolveComponentFactory(componentObj.component);
 				this.modalContext = this.modal.createComponent(this.childComponent);
@@ -45,7 +51,10 @@ export class ModalComponent implements OnInit {
 		if (code !== 27 || !this.isOpen) {
 			return;
 		}
-		this.isOpen = '';
-		this.modalContext.destroy();
+		this.isShow = '';
+		setTimeout(() => {
+			this.isOpen = '';
+			this.modalContext.destroy();
+		}, 300);
 	}
 }

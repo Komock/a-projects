@@ -1,6 +1,6 @@
 import { Board } from '../board/board.class';
 export class Project {
-	public ownerId?: string;
+	public authorId: string;
 	public title: string;
 	public description?: string;
 	public thumbUrl?: string;
@@ -10,7 +10,7 @@ export class Project {
 	public state?: string;
 	public boards: Board[];
 	public constructor (opts: any) {
-		this.ownerId = opts.ownerId;
+		this.authorId = opts.authorId;
 		this.title = opts.title;
 		this.creationDate = Date.now();
 		this.state = opts.state || 'active';

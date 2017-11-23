@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 
 // Firebase
 import * as firebase from 'firebase/app';
-import { AngularFireDatabase, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireObject, AngularFireAction } from 'angularfire2/database';
 
 // Classes
 import { Board } from '../board/board.class';
@@ -15,8 +15,13 @@ import { Board } from '../board/board.class';
 	styleUrls: ['./board-thumb.component.scss']
 })
 export class BoardThumbComponent implements OnInit {
-	@Input() public board: Board;
+	@Input() public boardAction: AngularFireAction<any>;
 	@Input() public projectKey: string;
+	public boardKey: string;
+	public board: Board;
 	public constructor() {}
-	public ngOnInit(): void {}
+	public ngOnInit(): void {
+		this.board = this.boardAction.payload.val();
+		this.boardKey = this.boardAction.payload.key;
+	}
 }

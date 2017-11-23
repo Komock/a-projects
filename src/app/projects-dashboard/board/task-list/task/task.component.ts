@@ -1,11 +1,14 @@
-import { Component, EventEmitter, OnInit, Input, Output, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { MatCheckboxChange } from '@angular/material';
 import * as firebase from 'firebase/app';
 
 // Services
-import { TitleService } from '../../title.service';
-import { ProjectsService } from '../../projects.service';
-import { UserService } from '../../user.service';
+import { TitleService } from '../../../../title.service';
+import { ProjectsService } from '../../../../projects.service';
+import { UserService } from '../../../../user.service';
+
+// FB
+import { AngularFireAction } from 'angularfire2/database';
 
 // Classes
 import { Task } from './task.class';
@@ -13,21 +16,13 @@ import { Task } from './task.class';
 @Component({
 	selector: 'a-task',
 	templateUrl: './task.component.html',
-	styleUrls: ['./task.component.scss'],
-	encapsulation: ViewEncapsulation.None
+	styleUrls: ['./task.component.scss']
 })
 export class TaskComponent implements OnInit {
+	@Input() public task: Task;
+	@Input() public index: number;
 	public user: firebase.User;
-
-	@Input()
-	public task: Task;
-
-	@Input()
-	public index: number;
-
-	@Output()
-	public onDelete: EventEmitter<number> = new EventEmitter<number>();
-
+	public isActive: boolean = false;
 	public constructor(
 		private _userService: UserService,
 		private _projectsService: ProjectsService
@@ -59,16 +54,27 @@ export class TaskComponent implements OnInit {
 		this._projectsService.activeTask$$.next(this.task);
 	}
 
+	public get taskStateClasses(): string {
+		const stateClass: string = 'task--' + this.task.status;
+		if (!this.isActive) {
+			return stateClass;
+		}
+		return stateClass + ' task--active';
+	}
+
 	// TODO
 	public ngOnInit(): void {
 		this._userService.user$
 			.subscribe((user: firebase.User) => {
 				this.user = user;
 			});
+
 		this._projectsService.activeTask$$
 			.subscribe((task: Task | null) => {
 				if (task && this.task.$key === task.$key) {
-					this.task = task;
+					this.isActive = true;
+				} else {
+					this.isActive = false;
 				}
 			});
 	}

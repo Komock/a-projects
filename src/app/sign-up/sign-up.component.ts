@@ -23,6 +23,7 @@ export class SignUpComponent implements OnInit {
 	public sendVerificationMsg: string = '';
 	public submitted: boolean = false;
 	public notValid: boolean = false;
+	public showPreloader: boolean = false;
 
 	public model: LoginForm = {
 		email: '',
@@ -48,11 +49,6 @@ export class SignUpComponent implements OnInit {
 		this._userService.signInByGoogle();
 	}
 
-	public test(e: Event): void {
-		console.log('click');
-		this.sendVerificationMsg = 'Adding verification link...';
-	}
-
 	public ngOnInit(): void {
 		this._userService.user$.subscribe((user: firebase.User) => {
 			if (user !== null ) {
@@ -64,25 +60,20 @@ export class SignUpComponent implements OnInit {
 				user.getIdToken().then((token: string) => {
 					const uid: string = user.uid;
 					const email: string = user.email;
+					this.showPreloader = true;
 					this.sendVerificationMsg = 'Adding verification link...';
-					this._userService.addVerificationLink(token, uid)
-						.switchMap((response: any) => {
-							if (response.error) {
-								console.error(response.error); // TODO error message sending
-								return;
-							}
-							this.sendVerificationMsg = 'Sending e-mail...';
-							return this._userService.sendEmailVerification(token, uid, email);
-						})
+					this._userService.sendVerificationLink(token, uid, email)
 						.subscribe((response: any) => {
 							if (response.error) {
 								console.error(response.error); // TODO error message sending
+								this.sendVerificationMsg = 'response.error';
 								return;
 							}
 							this.sendVerificationMsg = 'Mail was sent!';
-							console.log('response: ', response);
-							// this._router.navigate(['should-verify-email']);
+							this.showPreloader = false;
 						});
+					this.sendVerificationMsg = 'Sending e-mail...';
+					// this._router.navigate(['should-verify-email']);
 				});
 			}
 		});

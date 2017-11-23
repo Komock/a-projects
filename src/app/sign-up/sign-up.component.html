@@ -3,7 +3,7 @@
 		<div class="signup__inner">
 			<h2 class="form__title">Get started absolutely free</h2>
 			<!-- Preloader -->
-			<div class="preloader__wrap" *ngIf="sendVerificationMsg">
+			<div class="preloader__wrap" *ngIf="showPreloader">
 				<mat-spinner [diameter]="45" [strokeWidth]="3"></mat-spinner>
 			</div>
 			<p class="verify-email-msg" [hidden]="!sendVerificationMsg">{{sendVerificationMsg}}</p>
@@ -18,8 +18,6 @@
 				<button mat-raised-button class="form__submit" type="submit" color="accent" [disabled]="!signupForm.form.valid">Continue</button>
 			</form>
 			<div class="signup__w-services">
-				<button mat-raised-button class="form__submit"  color="primary" (click)="test($event)">Test</button>
-
 				<p>or sign up with</p>
 				<button mat-raised-button class="signup__btn signup__btn--google" color="warn" (click)="signupByGoogle()">Google</button>
 			</div>

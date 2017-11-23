@@ -9,7 +9,7 @@ import { UserService } from '../../user.service';
 import { ModalService } from '../../modal.service';
 
 // Firebase
-import { FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2/database';
+import { AngularFireList, AngularFireObject, AngularFireAction } from 'angularfire2/database';
 import { AngularFireAuth } from 'angularfire2/auth';
 import * as firebase from 'firebase/app';
 
@@ -39,7 +39,7 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 	public msg: string = '';
 	public hiddeSpiner: boolean = false;
 	public projects: Project[];
-	public collectiveProjects: Observable<Project[]>;
+	public collectiveProjects$: Observable<AngularFireAction<any>[]>;
 	public projectsSubscription$$: Subscription;
 	public projectsSubscription: Subscription;
 	public fullUserSubscription: Subscription;
@@ -60,15 +60,11 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 	}
 
 	public ngOnInit(): void {
-
 		// Get User Data for Projects requests
 		this.userExtraDataSubscription = this._userService
 			.userExtraData$.subscribe((userExtraData: any) => {
-				if (!userExtraData) {
-					return;
-				}
 				// Get Own Projects
-				this.projectsSubscription = this._projectsService.getProjects()
+				this.projectsSubscription = this._projectsService.getProjects().snapshotChanges()
 					.catch((err: string ) => {
 						console.warn(err);
 						this.hiddeSpiner = true;
@@ -86,9 +82,13 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 					});
 
 				// Get Collective Projects
+				console.log(userExtraData.collectiveProjects);
 				if (userExtraData.collectiveProjects
 					&& Object.keys(userExtraData.collectiveProjects).length > 0) {
-					this.collectiveProjects = this._projectsService.getCollectiveProjects(userExtraData.collectiveProjects);
+					this.collectiveProjects$ = this._projectsService.getCollectiveProjects(userExtraData.collectiveProjects);
+					this.collectiveProjects$.subscribe((some: any) => {
+						console.log(some);
+					});
 				}
 			});
 	}
