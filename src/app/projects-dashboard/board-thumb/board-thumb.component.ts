@@ -6,6 +6,10 @@ import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@ang
 import * as firebase from 'firebase/app';
 import { AngularFireDatabase, AngularFireObject, AngularFireAction } from 'angularfire2/database';
 
+// Services
+import { UserService } from '../../user.service';
+import { ProjectsService } from '../../projects.service';
+
 // Classes
 import { Board } from '../board/board.class';
 
@@ -19,9 +23,19 @@ export class BoardThumbComponent implements OnInit {
 	@Input() public projectKey: string;
 	public boardKey: string;
 	public board: Board;
-	public constructor() {}
+	public uid: string;
+	public user: firebase.User;
+	public constructor(
+		private _userService: UserService,
+		private _projectsService: ProjectsService
+	) {}
 	public ngOnInit(): void {
-		this.board = this.boardAction.payload.val();
-		this.boardKey = this.boardAction.payload.key;
+		this._userService.user$
+			.subscribe((user: firebase.User) => {
+				this.user = user;
+				this.uid = this._projectsService.authorId;
+				this.board = this.boardAction.payload.val();
+				this.boardKey = this.boardAction.payload.key;
+			});
 	}
 }

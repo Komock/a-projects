@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy, HostListener } from '@angular/core';
-import { Router, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
+import { Router, Params, ActivatedRouteSnapshot, ActivatedRoute } from '@angular/router';
 import { AngularFireDatabase, AngularFireList, AngularFireObject } from 'angularfire2/database';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import * as firebase from 'firebase/app';
@@ -48,7 +48,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 	) { }
 
 	public back(): void {
-		this._router.navigateByUrl(`projects/${this._projectsService.currentProjectKey}`);
+		this._router.navigateByUrl(`projects/${this._projectsService.authorId}/${this._projectsService.currentProjectKey}`);
 	}
 
 	public deleteBoard(key: string): void {
@@ -76,7 +76,7 @@ export class BoardComponent implements OnInit, OnDestroy {
 
 	public ngOnInit(): void {
 		this.activatedRouteSubscription = this._activatedRoute.params
-			.switchMap((params: { key: string}) => {
+			.switchMap((params: {[key: string]: string}) => {
 				this.key = params.key;
 				this._projectsService.currentBoardKey = this.key;
 				return this._userService.user$;
@@ -93,10 +93,10 @@ export class BoardComponent implements OnInit, OnDestroy {
 				this.board = board;
 			});
 
-			this._projectsService.activeTask$$
-				.subscribe((val: Task | null) => {
-					this.activeTask = val;
-				});
+		this._projectsService.currentTaskKey$$
+			.subscribe((val: Task | null) => {
+				this.activeTask = val;
+			});
 
 	}
 

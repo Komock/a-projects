@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import {AnimationTriggerMetadata, trigger, transition, style, animate, query} from '@angular/animations';
 import * as firebase from 'firebase/app';
 
@@ -47,13 +47,13 @@ const taskAnimation: any =
 	styleUrls: ['./task-list.component.scss'],
 	animations: [taskAnimation],
 })
-export class TaskListComponent implements OnInit {
+export class TaskListComponent implements OnInit, OnDestroy {
 	public msg: string = '';
-	public taskList: Task[];
-	public fullTaskList: Task[];
+	public taskList: AngularFireAction<any>[];
+	public fullTaskList: AngularFireAction<any>[];
 	public user: firebase.User;
+	public subscription: Subscription;
 	public selectedStatus: string = 'all';
-	public selectedTaskKey: string;
 	public statuses: HashMap[] = [
 			{ name: 'All', val: 'all' },
 			{ name: 'Completed', val: 'completed' },
@@ -76,44 +76,33 @@ export class TaskListComponent implements OnInit {
 			this.taskList = this.fullTaskList;
 			return;
 		}
-		this.taskList = this.fullTaskList.filter((task: Task) => task.status === e.value);
+		this.taskList = this.fullTaskList.filter((task: AngularFireAction<any>) => task.payload.val().status === e.value);
 	}
 
 	public ngOnInit(): void {
-		this._userService.user$
+		this.subscription = this._userService.user$
 			.switchMap((user: firebase.User) => {
 				this.user = user;
 				return this._projectsService.getTasks().snapshotChanges();
 			})
-			.map((tasksActions: AngularFireAction<any>[]) => {
-				const tasks: Task[] = [];
-				tasksActions.forEach((action: AngularFireAction<any>) => {
-					const task: Task = action.payload.val();
-					task.$key = action.payload.key;
-					tasks.push(task);
-				});
-				return tasks;
-			})
-			.subscribe((tasks: Task[]) => {
-				this.fullTaskList = tasks.slice();
+			.subscribe((tasksActions: AngularFireAction<any>[]) => {
+				this.fullTaskList = tasksActions;
 				this.msg = '';
 				if (this.selectedStatus === 'all') {
-					this.taskList = tasks;
+					this.taskList = tasksActions;
 				} else {
 					this.taskList = this.fullTaskList
-						.filter((task: Task) => task.status === this.selectedStatus);
+						.filter((task: AngularFireAction<any>) => task.payload.val().status === this.selectedStatus);
 				}
-				if (!tasks.length) {
+				if (!tasksActions.length) {
 					this.msg = 'No tasks added yet';
 					return;
 				}
 			});
-		this._projectsService.activeTask$$
-			.subscribe((task: Task) => {
-				if (task) {
-					this.selectedTaskKey = task.$key;
-				}
-			});
+	}
+
+	public ngOnDestroy(): void {
+		this.subscription.unsubscribe();
 	}
 
 	private errorHandler(err: Error): void {

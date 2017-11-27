@@ -82,14 +82,11 @@ export class ProjectsPanelComponent implements OnInit, OnDestroy {
 					});
 
 				// Get Collective Projects
-				console.log(userExtraData.collectiveProjects);
 				if (userExtraData.collectiveProjects
 					&& Object.keys(userExtraData.collectiveProjects).length > 0) {
 					this.collectiveProjects$ = this._projectsService.getCollectiveProjects(userExtraData.collectiveProjects);
-					this.collectiveProjects$.subscribe((some: any) => {
-						console.log(some);
-					});
 				}
+
 			});
 	}
 

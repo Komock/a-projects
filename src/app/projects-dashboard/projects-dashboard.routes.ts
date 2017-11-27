@@ -4,9 +4,7 @@ import { Route } from '@angular/router';
 import { ProjectComponent } from './project/project.component';
 import { BoardComponent } from './board/board.component';
 import { ProjectsPanelComponent } from './projects-panel/projects-panel.component';
-
-// Services
-import { BoardGuardService } from './board/board-guard.service';
+import { TaskActionsComponent } from './board/task-actions/task-actions.component';
 
 export const routes: Route[] = [{
 	path: '',
@@ -16,7 +14,7 @@ export const routes: Route[] = [{
 	},
 	children: [
 	{
-		path: ':key',
+		path: ':uid/:key',
 		component: ProjectComponent,
 		data: {
 			title: 'Project'
@@ -24,7 +22,6 @@ export const routes: Route[] = [{
 		children: [
 			{
 				path: ':key',
-				canActivate: [BoardGuardService],
 				component: BoardComponent,
 				data: {
 					title: 'Board'

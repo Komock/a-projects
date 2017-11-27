@@ -106,10 +106,10 @@ exports.init = App => {
 		// let participant = pSnapshot.val()[pUid];
 
 		// let collectiveProject = await Db.ref(`users/${pUid}/collectiveProjects/${body.projectKey}`)
-		// 	.set({ ownerUid: body.ownerUid });
+		// 	.set({ authorId: body.authorId });
 		// console.log('collectiveProject: ', collectiveProject);
 
-		// let project = await Db.ref(`projects/${body.ownerUid}/${body.projectKey}/participants`)
+		// let project = await Db.ref(`projects/${body.authorId}/${body.projectKey}/participants`)
 		// 	.set(participant);
 		// console.log('project: ', project);
 	});

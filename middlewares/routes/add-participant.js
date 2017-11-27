@@ -20,11 +20,11 @@ exports.init = (Db) => {
 		console.log(pUid, participant);
 
 		await Db.ref(`users/${pUid}/collectiveProjects/${body.projectKey}`)
-			.set({ ownerUid: body.ownerUid });
+			.set({ authorId: body.authorId });
 
 		participant.read = true; // Allow Read
 
-		let project = await Db.ref(`projects/${body.ownerUid}/${body.projectKey}/participants/${pUid}`)
+		let project = await Db.ref(`projects/${body.authorId}/${body.projectKey}/participants/${pUid}`)
 			.set(participant);
 		console.log('project: ', project);	
 		

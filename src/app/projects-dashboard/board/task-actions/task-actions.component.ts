@@ -1,6 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 
+// RX
+import { Subscription } from 'rxjs/Subscription';
+
+// Services
 import { ProjectsService } from '../../../projects.service';
+
+// Classes
 import { Task } from '../task-list/task/task.class';
 
 @Component({
@@ -8,26 +14,27 @@ import { Task } from '../task-list/task/task.class';
 	templateUrl: './task-actions.component.html',
 	styleUrls: ['./task-actions.component.scss']
 })
-export class TaskActionsComponent implements OnInit {
+export class TaskActionsComponent implements OnInit, OnDestroy {
 
 	public activeTask: Task | null = null;
+	public subscription: Subscription;
 
 	public constructor(
 		private _projectsService: ProjectsService
 	) { }
 
 	public closeTaskActions(): void {
-		this._projectsService.activeTask$$.next(null);
+		this._projectsService.currentTaskKey$$.next(null);
 	}
 
 	public delete(): void {
 		this._projectsService.deleteTask(this.activeTask.$key);
-		this._projectsService.activeTask$$.next(null);
+		this._projectsService.currentTaskKey$$.next(null);
 	}
 
 	public updateTitleView(e: KeyboardEvent): void {
 		this.activeTask.title = (e.target as HTMLTextAreaElement).value;
-		this._projectsService.activeTask$$.next(this.activeTask);
+		this._projectsService.currentTaskKey$$.next(this.activeTask);
 	}
 
 	public updateTitle(e: KeyboardEvent): void {
@@ -37,16 +44,15 @@ export class TaskActionsComponent implements OnInit {
 	}
 
 	public ngOnInit(): void {
-		this._projectsService.activeTask$$
+		this.subscription = this._projectsService.currentTaskKey$$
 			.subscribe((task: Task | null) => {
-				// if (!this.activeTask) {
-					this.activeTask = task;
-					return;
-				// }
-				// if ( task ) { // && this.activeTask.$key === task.$key
-				// 	this.activeTask = task;
-				// }
+				this.activeTask = task;
+				return;
 			});
+	}
+
+	public ngOnDestroy(): void {
+		this.subscription.unsubscribe();
 	}
 
 }

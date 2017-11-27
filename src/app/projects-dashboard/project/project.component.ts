@@ -40,9 +40,8 @@ import { Board } from '../board/board.class';
 export class ProjectComponent implements OnInit, OnDestroy {
 	public project: Project;
 	public projectKey: string;
-	public projectSubscription: Subscription;
 	public boards$: Observable<any[]>;
-	public userDataSubscription: Subscription;
+	public subscription: Subscription;
 	public user: firebase.User;
 	public project$: Observable<AngularFireAction<any>>;
 	public formModel: FormGroup;
@@ -105,35 +104,37 @@ export class ProjectComponent implements OnInit, OnDestroy {
 		});
 
 		// ==== Load Project ==== //
-		this.userDataSubscription = this._userService.userExtraData$
+		this.subscription = this._userService.userExtraData$
 			.switchMap((user: firebase.User) => {
 				this.user = user; // Store User
 				return this._activatedRoute.params;
 			})
-			.subscribe((params: Params) => {
+			.switchMap((params: Params) => {
+				this._projectsService.authorId = params.uid;
+				this._projectsService.isCollectiveProject = params.uid !== this.user.uid;
 				this._projectsService.currentProjectKey = params.key;
-				this.project$ = this._projectsService.getProject().snapshotChanges();
 				this.boards$ = this._projectsService.getBoards().snapshotChanges();
-				this.projectSubscription = this.project$
-					.subscribe((action: AngularFireAction<any>) => {
-						if (!action) {
-							this._router.navigate(['projects']);
-							return;
-						}
-						this.project = action.payload.val(); // Store Project
-						this.projectKey = action.payload.key;
-						this.formModel.patchValue({
-							title: this.project.title,
-							description: this.project.description
-						});
-					});
+				this.project$ = this._projectsService.getProject().snapshotChanges();
+				return this.project$;
+			})
+			.subscribe((action: AngularFireAction<any>) => {
+				if (!action) {
+					this._router.navigate(['projects']);
+				}
+				this.project = action.payload.val(); // Store Project
+				this.projectKey = action.payload.key;
+				this.formModel.patchValue({
+					title: this.project.title,
+					description: this.project.description
+				});
 			});
 	}
 
 	public ngOnDestroy(): void {
-		this.projectSubscription.unsubscribe();
-		this.userDataSubscription.unsubscribe();
+		this.subscription.unsubscribe();
 		this._projectsService.currentProjectKey = '';
+		this._projectsService.authorId = '';
+		this._projectsService.isCollectiveProject = false;
 	}
 
 	private errorHandler(err: Error): void {

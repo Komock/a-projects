@@ -17,8 +17,10 @@
 				<div class="board__col board__task-list">
 					<a-task-list></a-task-list>
 				</div>
+
 				<div *ngIf="!activeTask" class="board__col board__desc">
-					<!-- Description -->
+					<router-outlet></router-outlet>
+					<!-- Board Info -->
 					<h4 class="desc-title">Board description:</h4>
 					<form class="desc-form" [formGroup]="boardModel">
 						<mat-input-container class="form__input">

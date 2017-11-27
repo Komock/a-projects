@@ -27,12 +27,20 @@
 			"$boardsId": {
 				".read": "auth.uid == $boardsId",
 				".write": "auth.uid == $boardsId",
+				"$projId": {
+					".read": "root.child('users').child(auth.uid).child('collectiveProjects').hasChild($projId)",
+					".write": true
+				}
 			}
 		},
 		"tasks": {
 			"$tasksId": {
 				".read": "auth.uid == $tasksId",
 				".write": "auth.uid == $tasksId",
+				"$projId": {
+					".read": "root.child('users').child(auth.uid).child('collectiveProjects').hasChild($projId)",
+					".write": true
+				}
 			}
 		}
 	}

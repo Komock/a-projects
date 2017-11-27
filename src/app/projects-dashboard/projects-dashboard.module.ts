@@ -18,7 +18,6 @@ import { TaskActionsComponent } from './board/task-actions/task-actions.componen
 import { FormAddProjectComponent } from './form-add-project/form-add-project.component';
 
 // Services
-import { BoardGuardService } from './board/board-guard.service';
 
 // Pipes
 import { ReversePipe } from '../reverse.pipe';
@@ -51,8 +50,6 @@ import { routes } from './projects-dashboard.routes';
 		TaskListComponent,
 		TaskActionsComponent
 	],
-	providers: [
-		BoardGuardService
-	]
+	providers: []
 })
 export class ProjectsDashboardModule { }

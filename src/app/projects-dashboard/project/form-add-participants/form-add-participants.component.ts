@@ -58,7 +58,7 @@ export class FormAddParticipantsComponent implements OnInit, OnDestroy {
 		}
 
 		const body: any = {
-			ownerUid: this.user.uid,
+			authorId: this.user.uid,
 			projectKey: this._projectsService.currentProjectKey,
 			email: this.formModel.controls.email.value
 		};

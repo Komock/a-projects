@@ -19,12 +19,14 @@ import 'rxjs/add/observable/forkJoin';
 @Injectable()
 export class ProjectsService {
 	public user: firebase.User;
+	public authorId: string;
+	public isCollectiveProject: boolean = false;
 	public projects$: AngularFireList<Project>;
 	public tasks$: AngularFireList<Task>;
 	public currentProjectKey: string;
 	public currentBoardKey: string;
 	public currentTaskKey: string;
-	public activeTask$$: Subject< Task | null> = new Subject();
+	public currentTaskKey$$: Subject< Task | null> = new Subject();
 
 	public constructor(
 		public _db: AngularFireDatabase,
@@ -34,10 +36,16 @@ export class ProjectsService {
 			.subscribe((user: firebase.User) => {
 				this.user = user;
 			});
+		this.currentTaskKey$$
+			.subscribe((task: Task) => {
+				if (task) {
+					this.currentTaskKey = task.$key;
+				}
+			});
 	}
 
 	public dataPath(target: string): string {
-		const uid: string = this.user.uid;
+		const uid: string = this.isCollectiveProject ? this.authorId : this.user.uid;
 		switch (target) {
 			case 'projects':
 				return `projects/${uid}`;
@@ -48,9 +56,9 @@ export class ProjectsService {
 			case 'board':
 				return `boards/${uid}/${this.currentProjectKey}/${this.currentBoardKey}`;
 			case 'tasks':
-				return `tasks/${uid}/${this.currentBoardKey}`;
+				return `tasks/${uid}/${this.currentProjectKey}/${this.currentBoardKey}`;
 			case 'task':
-				return `tasks/${uid}/${this.currentBoardKey}/${this.currentTaskKey}`;
+				return `tasks/${uid}/${this.currentProjectKey}/${this.currentBoardKey}/${this.currentTaskKey}`;
 			case 'participants':
 				return `projects/${uid}/${this.currentProjectKey}/participants`;
 			default:
@@ -70,7 +78,7 @@ export class ProjectsService {
 		Object.keys(collectiveProjectsObj)
 			.forEach((key: string) => {
 				const project$: Observable<AngularFireAction<any>> = this._db
-					.object(`projects/${collectiveProjectsObj[key].ownerUid}/${key}`).snapshotChanges();
+					.object(`projects/${collectiveProjectsObj[key].authorId}/${key}`).snapshotChanges();
 				projectsObservablesArr.push(project$);
 			});
 		return Observable.zip(...projectsObservablesArr);
@@ -109,7 +117,7 @@ export class ProjectsService {
 
 	// ==== Boards Actions
 	public getBoards(): AngularFireList<Board> {
-		return this._db.list( this.dataPath('boards') );
+		return this._db.list(this.dataPath('boards'));
 	}
 
 	// ==== Single Board Actions

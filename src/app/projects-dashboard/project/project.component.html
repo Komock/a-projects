@@ -48,7 +48,7 @@
 </div>
 
 <!-- Router Outlet -->
-<router-outlet></router-outlet>
+<router-outlet *ngIf="project"></router-outlet>
 
 <!-- Title menu -->
 <mat-menu #titleMenu="matMenu" class="project__menu edit-box" [overlapTrigger]="false">
@@ -67,14 +67,6 @@
 		</mat-input-container>
 	</form>
 </mat-menu>
-
-<!-- Project menu -->
-<!-- <mat-menu #projectMenu="matMenu" class="project__menu" [overlapTrigger]="false">
-	<button mat-menu-item (click)="deleteProject(project.$key)">
-		<mat-icon>delete</mat-icon>
-		<span>Delete</span>
-	</button>
-</mat-menu> -->
 
 <!-- Preloader -->
 <ng-template #preloader>

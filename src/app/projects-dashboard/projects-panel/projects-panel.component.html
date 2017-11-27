@@ -9,7 +9,7 @@
 						<mat-spinner [diameter]="45" [strokeWidth]="3"></mat-spinner>
 					</div>
 					<div class="projects-list" *ngIf="projects">
-						<a-project-thumb *ngFor="let project of projects | reverse" [projectAction]="project" [isShared]="false"></a-project-thumb>
+						<a-project-thumb *ngFor="let project of projects | reverse" [projectAction]="project" [isCollective]="false"></a-project-thumb>
 					</div>
 					<!-- MSG no projects -->
 					<div class="projects-panel__msg" *ngIf="msg" @fadeInUpAnimation>
@@ -20,7 +20,7 @@
 				<!-- Collective Projects -->
 				<mat-tab label="Collective Projects" *ngIf="collectiveProjects$">
 					<div class="projects-list">
-						<a-project-thumb *ngFor="let cProject of collectiveProjects$ | async;" [projectAction]="cProject" [isShared]="true"></a-project-thumb>
+						<a-project-thumb *ngFor="let cProject of collectiveProjects$ | async;" [projectAction]="cProject" [isCollective]="true"></a-project-thumb>
 					</div>
 				</mat-tab>
 				
