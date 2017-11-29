@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { AngularFireDatabase, AngularFireList, AngularFireObject, AngularFireAction } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireList, AngularFireObject,
+	AngularFireAction, DatabaseReference } from 'angularfire2/database';
 import * as firebase from 'firebase/app';
 
 // Services
@@ -69,7 +70,8 @@ export class ProjectsService {
 
 	// ==== Projects Actions
 	public getProjects(): AngularFireList<Project> {
-		this.projects$ = this._db.list(this.dataPath('projects'));
+		this.projects$ = this._db.list('/projects',
+			(ref: DatabaseReference) => ref.orderByChild('authorId').equalTo(this.user.uid));
 		return this.projects$;
 	}
 
