@@ -1,10 +1,29 @@
-
 const KoaRouter = require('koa-router');
-const Router = new KoaRouter({ prefix: '/api'});
+const Router = new KoaRouter({ prefix: '/api' });
+
+//==== Env
+const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'dev';
 
 //==== Firebase
 const Firebase = require('firebase-admin');
-const FbCredential = require('../firebase-key.json');
+let FbCredential;
+if (isDev) {
+	FbCredential = require('../firebase-key.json');
+} else {
+	// Production Env
+	FbCredential = {
+		type: process.env.FIREBASE_TYPE,
+		project_id: process.env.FIREBASE_PROJECT_ID,
+		private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+		private_key: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+		client_email: process.env.FIREBASE_CLIENT_EMAIL,
+		client_id: process.env.FIREBASE_CLIENT_ID,
+		auth_uri: process.env.FIREBASE_AUTH_URI,
+		token_uri: process.env.FIREBASE_TOKEN_URI,
+		auth_provider_x509_cert_url: process.env.FIREBASE_AUTH_PROVIDER_X509_CERT_URL,
+		client_x509_cert_url: process.env.FIREBASE_CLIENT_X509_CERT_URL
+	}
+}
 Firebase.initializeApp({
 	credential: Firebase.credential.cert(FbCredential),
 	databaseURL: 'https://projects-lab-cc451.firebaseio.com'
@@ -27,7 +46,6 @@ exports.init = App => {
 	Router.post('/verify-email',
 		require('./routes/verify-email.js').init(Db, FbAuth));
 
-
 	//==== Update User Data
 	async function updateUser(uid, update) {
 		console.log(uid, update)
@@ -48,7 +66,7 @@ exports.init = App => {
 			});
 	});
 
-	async function createCustomToken(uid, update){
+	async function createCustomToken(uid, update) {
 		return await FbAuth.createCustomToken(uid, update);
 	}
 
@@ -85,11 +103,10 @@ exports.init = App => {
 			});
 	});
 
-
 	//==== Test Add 
 	Router.post('/add', async(ctx, next) => {
 		const body = ctx.request.body;
-		if (!body.email) return ctx.throw(400, {message: 'No e-mail provided!'});
+		if (!body.email) return ctx.throw(400, { message: 'No e-mail provided!' });
 
 		let pSnapshot = await Db.ref('users')
 			.orderByChild('email')
@@ -114,11 +131,10 @@ exports.init = App => {
 		// console.log('project: ', project);
 	});
 
-
 	//==== Test
 	Router.post('/test', async(ctx, next) => { // authFirebaseToken
 		console.log(ctx.request);
-		
+
 		// await ref
 		// 	.child()
 		// 	.once('value', function(snapshot) {
@@ -127,9 +143,8 @@ exports.init = App => {
 		// 	ctx.body = exists;
 		// });
 
-		ctx.body = {msg: 'test'};
+		ctx.body = { msg: 'test' };
 	});
-
 
 	//==== Add MDW
 	App.use(Router.routes())
