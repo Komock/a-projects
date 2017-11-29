@@ -12,6 +12,9 @@
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
+  "engines": {
+    "node": "8.9.1"
+  },
   "private": true,
   "dependencies": {
     "core-js": "^2.4.1",

@@ -27,6 +27,7 @@ require('./middlewares/errors').init(App);
 require('./middlewares/routes').init(App);
 
 
+const port = process.env.PORT || 3090;
 
 // Start App
-App.listen(3090);
+App.listen(port);
