@@ -12,7 +12,7 @@ import { VerifyEmailComponent } from './verify-email/verify-email.component';
 import { ProjectsPanelGuardService } from './projects-dashboard/projects-panel-guard.service';
 import { AuthGuardService } from './auth-guard.service';
 import { VerifyEmailGuardService } from './verify-email-guard.service';
-import { UserGuardService } from './user-guard.service';
+import { ProjectsGuardService } from './projects-guard.service';
 
 
 export const routes: Route[] = [{
@@ -21,12 +21,12 @@ export const routes: Route[] = [{
 	data: { title: 'Start your Project today!' }
 }, {
 	path: 'signup',
-	canActivate: [VerifyEmailGuardService, UserGuardService],
+	canActivate: [VerifyEmailGuardService, ProjectsGuardService],
 	component: SignUpComponent,
 	data: { title: 'Sign Up' }
 }, {
 	path: 'signin',
-	canActivate: [VerifyEmailGuardService, UserGuardService],
+	canActivate: [VerifyEmailGuardService, ProjectsGuardService],
 	component: SignInComponent,
 	data: { title: 'Sign In' }
 }, {
@@ -36,12 +36,12 @@ export const routes: Route[] = [{
 	data: { title: 'Profile' }
 }, {
 	path: 'should-verify-email',
-	canActivate: [AuthGuardService, UserGuardService],
+	canActivate: [AuthGuardService],
 	component: ShouldVerifyEmailComponent,
 	data: { title: 'Verify e-mail' }
 }, {
 	path: 'verify-email',
-	canActivate: [AuthGuardService, UserGuardService],
+	canActivate: [AuthGuardService, ProjectsGuardService],
 	component: VerifyEmailComponent,
 	data: { title: 'Verification' }
 }, {

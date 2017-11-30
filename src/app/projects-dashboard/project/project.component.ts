@@ -1,12 +1,11 @@
-import { Component, HostListener, OnInit, AfterViewInit, OnDestroy, ViewEncapsulation } from '@angular/core';
+import { Component, HostListener, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { FormBuilder, FormGroup, FormArray, FormControl, Validators } from '@angular/forms';
 import { Project } from './project.class';
 
 // Firebase
 import * as firebase from 'firebase/app';
-import { AngularFireDatabase, AngularFireList, AngularFireObject,
-	SnapshotAction, AngularFireAction, DatabaseSnapshot } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireAction } from 'angularfire2/database';
 
 // Services
 import { TitleService } from '../../title.service';
@@ -54,13 +53,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
 		private _projectsService: ProjectsService,
 		private _userService: UserService,
 		private _modalService: ModalService,
-		private _titleService: TitleService,
 		private _db: AngularFireDatabase,
 	) {}
-
-	public get pageTitle(): string {
-		return this.project.title;
-	}
 
 	public back(): void {
 		this._router.navigate(['projects']);
@@ -72,8 +66,8 @@ export class ProjectComponent implements OnInit, OnDestroy {
 		this._projectsService.deleteProject(key);
 	}
 
-	public updateProject(e: Event | any): void {
-		const el: HTMLInputElement = e.srcElement;
+	public updateProject(e: Event): void {
+		const el: HTMLInputElement = e.srcElement as HTMLInputElement;
 		this._projectsService.getProject()
 			.update({
 				[el.name]: el.value

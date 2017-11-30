@@ -34,7 +34,7 @@ import { ModalService } from './modal.service';
 import { AngularFireDatabase, AngularFireList } from 'angularfire2/database';
 import { ProjectsPanelGuardService } from './projects-dashboard/projects-panel-guard.service';
 import { AuthGuardService } from './auth-guard.service';
-import { UserGuardService } from './user-guard.service';
+import { ProjectsGuardService } from './projects-guard.service';
 import { VerifyEmailGuardService } from './verify-email-guard.service';
 
 // Directives
@@ -94,7 +94,7 @@ import { routes } from './app.routes';
 		AngularFireDatabase,
 		ProjectsPanelGuardService,
 		AuthGuardService,
-		UserGuardService,
+		ProjectsGuardService,
 		VerifyEmailGuardService
 	],
 	bootstrap: [AppComponent]

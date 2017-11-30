@@ -10,7 +10,7 @@ import 'rxjs/add/operator/map';
 import { UserService } from './user.service';
 
 @Injectable()
-export class UserGuardService {
+export class ProjectsGuardService {
 
 	public constructor(
 		private _userService: UserService,
@@ -20,7 +20,7 @@ export class UserGuardService {
 	public canActivate(): Observable<boolean> {
 		return this._userService.user$
 			.map((user: firebase.User) => {
-				if (user) {
+				if (user && user.emailVerified) {
 					this._router.navigate(['projects']);
 					return false;
 				}

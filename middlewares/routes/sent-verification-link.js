@@ -1,5 +1,9 @@
+//==== Env
+const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'dev';
+
 const crypto = require('crypto');
 const mailer = require('../handlers/mailer');
+
 
 // Create Hash in DB
 async function saveVerificationHash(Db,uid) {
@@ -9,6 +13,7 @@ async function saveVerificationHash(Db,uid) {
 	return hash;
 }
 
+
 // Send Verification E-mail
 async function sendVerificationEmail(uid, email, hash) {
 	// setup email data with unicode symbols
@@ -16,10 +21,10 @@ async function sendVerificationEmail(uid, email, hash) {
 		from: '"A-Projects 👻" <mailer@creativefarm.ru>', // sender address
 		to: email, // list of receivers
 		subject: 'A-Projects. E-mail Verification', // Subject line
-		text: `Link: http://localhost:3090/api/verify-email?hash=${hash}&uid=${uid}`, // plain text body
+		text: `Link: ${process.env.SPA_DOMAIN}/api/verify-email?hash=${hash}&uid=${uid}`, // plain text body
 		html: `Link: 
-			<a href="http://localhost:3090/api/verify-email?hash=${hash}&uid=${uid}" target="_blank">
-			http://localhost:3090/api/verify-email?hash=${hash}&uid=${uid}
+			<a href="${process.env.SPA_DOMAIN}/api/verify-email?hash=${hash}&uid=${uid}" target="_blank">
+			${process.env.SPA_DOMAIN}/api/verify-email?hash=${hash}&uid=${uid}
 			</a>` // html body
 	};
 

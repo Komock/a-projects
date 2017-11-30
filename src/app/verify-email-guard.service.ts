@@ -19,10 +19,7 @@ export class VerifyEmailGuardService {
 	public canActivate(): Observable<boolean> {
 		return this._userService.user$
 			.map((user: firebase.User) => {
-				if (!user) {
-					return true;
-				}
-				if (!user.emailVerified) {
+				if (user && !user.emailVerified) {
 					this._router.navigate(['/should-verify-email']);
 					return false;
 				}

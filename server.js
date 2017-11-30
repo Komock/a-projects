@@ -4,8 +4,11 @@ const BodyParser = require('koa-bodyparser');
 const App = new Koa();
 const Cors = require('koa2-cors');
 
-//==== Env
+//=== Env
 const isDev = !process.env.NODE_ENV || process.env.NODE_ENV === 'dev';
+
+//=== Domains
+process.env.SPA_DOMAIN = isDev ? 'http://localhost:5000' : 'http://creativefarm.ru';
 
 //=== CORS
 App.use(Cors());
@@ -26,8 +29,6 @@ require('./middlewares/errors').init(App);
 //=== Routes
 require('./middlewares/routes').init(App);
 
-
-const port = process.env.PORT || 3090;
-
 // Start App
+const port = process.env.PORT || 3090;
 App.listen(port);
