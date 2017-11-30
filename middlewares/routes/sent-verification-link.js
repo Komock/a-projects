@@ -21,10 +21,10 @@ async function sendVerificationEmail(uid, email, hash) {
 		from: '"A-Projects 👻" <mailer@creativefarm.ru>', // sender address
 		to: email, // list of receivers
 		subject: 'A-Projects. E-mail Verification', // Subject line
-		text: `Link: ${process.env.SPA_DOMAIN}/api/verify-email?hash=${hash}&uid=${uid}`, // plain text body
+		text: `Link: ${process.env.SPA_DOMAIN}/verify-email?hash=${hash}&uid=${uid}`, // plain text body
 		html: `Link: 
-			<a href="${process.env.SPA_DOMAIN}/api/verify-email?hash=${hash}&uid=${uid}" target="_blank">
-			${process.env.SPA_DOMAIN}/api/verify-email?hash=${hash}&uid=${uid}
+			<a href="${process.env.SPA_DOMAIN}/verify-email?hash=${hash}&uid=${uid}" target="_blank">
+			${process.env.SPA_DOMAIN}/verify-email?hash=${hash}&uid=${uid}
 			</a>` // html body
 	};
 

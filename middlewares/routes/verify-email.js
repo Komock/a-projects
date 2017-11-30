@@ -15,6 +15,7 @@ exports.init = (Db, FbAuth) => {
 			ctx.body = {error: 'Wrong verification link'};
 			ctx.status = 400;
 		}
+		await Db.ref(`verification-links/${body.uid}/verifyEmailHash`).remove();
 		const user = await FbAuth.updateUser(body.uid, { emailVerified: true });
 		await Db.ref(`verification-links/${body.uid}`).remove();
 		ctx.body = user;
