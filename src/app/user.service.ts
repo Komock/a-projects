@@ -45,12 +45,16 @@ export class UserService {
 
 
 	// ==== Sign Up
-	public signUpByEmail(user: LoginForm): Observable<firebase.User> {
+	public signUpByEmail(form: LoginForm): Observable<firebase.User> {
 		const userProm: Promise<any> = this._afAuth
-			.auth.createUserWithEmailAndPassword(user.email, user.password);
-		userProm.then((fbUser: firebase.User) => {
-			this.addExtraUserToDB(fbUser);
-		});
+			.auth.createUserWithEmailAndPassword(form.email, form.password)
+			.then((fbUser: firebase.User) => {
+				fbUser.updateProfile({
+					displayName: form.displayName,
+					photoURL: ''
+				});
+				this.addExtraUserToDB(fbUser, form.displayName);
+			});
 		return Observable.fromPromise(userProm);
 	}
 
@@ -98,14 +102,17 @@ export class UserService {
 
 
 	// ==== Add Extra User Data
-	private addExtraUserToDB(fbUser: firebase.User): void {
-		const userData: {[key: string]: any} = {};
+	private addExtraUserToDB(fbUser: firebase.User, displayName?: string): void {
+		const userData: HashMap = {};
 		const fbUserProps: string[] = ['uid', 'photoURL', 'email', 'emailVerified', 'providerId', 'displayName'];
 		fbUserProps.forEach((prop: string) => {
 			if (fbUser[prop]) {
 				userData[prop] = fbUser[prop];
 			}
 		});
+		if (displayName) {
+			userData.displayName = displayName;
+		}
 		this._db.object(`/users/${fbUser.uid}`)
 			.set(userData)
 			.catch((err: Error) => {

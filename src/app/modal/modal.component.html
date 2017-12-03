@@ -6,7 +6,9 @@
 	</div>
 	<div class="modal__close">
 		<small>Or press "ESC"</small>
-		<button mat-raised-button color="primary" (click)="close()">Close</button>
+		<button mat-icon-button (click)="close()">
+			<mat-icon aria-label="Close">close</mat-icon>
+		</button>
 	</div>
 	<div class="modal__overlay"></div>
 </div>

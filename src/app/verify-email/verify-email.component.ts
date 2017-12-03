@@ -41,6 +41,8 @@ export class VerifyEmailComponent implements OnInit {
 							return this.errorHandler(response.error);
 						}
 						this.showSuccessMsg = true;
+						const _window: Window = window;
+						_window.location.assign(_window.location.origin + '/projects');
 					});
 			});
 	}

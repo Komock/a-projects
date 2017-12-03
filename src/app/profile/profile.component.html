@@ -3,5 +3,20 @@
 		<p>
 			profile works!
 		</p>
+		<mat-list *ngIf="user$ | async as user">
+			<mat-list-item *ngIf="user.photoURL; else userIcon">
+				<img matListAvatar [src]="user.photoURL">
+			</mat-list-item>
+			<mat-list-item>
+				<p matLine>{{user.displayName}}</p>
+			</mat-list-item>
+			<mat-list-item>
+				<p matLine>{{user.email}}</p>
+			</mat-list-item>
+		</mat-list>
 	</div>
 </div>
+
+<ng-template #userIcon>
+	<mat-icon class="user-icon">account_circle</mat-icon>
+</ng-template>

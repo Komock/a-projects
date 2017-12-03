@@ -13,6 +13,9 @@
 					<input matInput placeholder="E-mail" name="email" type="email" minlength="5" required [(ngModel)]="model.email">
 				</mat-input-container>
 				<mat-input-container class="form__input">
+					<input matInput placeholder="User name" name="displayName" type="text" minlength="3" required [(ngModel)]="model.displayName">
+				</mat-input-container>
+				<mat-input-container class="form__input">
 					<input matInput placeholder="Password" name="password" type="password" minlength="4" required [(ngModel)]="model.password">
 				</mat-input-container>
 				<button mat-raised-button class="form__submit" type="submit" color="accent" [disabled]="!signupForm.form.valid">Continue</button>

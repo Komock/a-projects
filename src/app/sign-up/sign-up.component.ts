@@ -1,10 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+
+// Services
 import { UserService } from '../user.service';
 
+// RX
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/observable/of';
 
+// FB
 import * as firebase from 'firebase/app';
 
 // Animations
@@ -27,6 +31,7 @@ export class SignUpComponent implements OnInit {
 
 	public model: LoginForm = {
 		email: '',
+		displayName: '',
 		password: ''
 	};
 

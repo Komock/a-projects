@@ -21,6 +21,7 @@ type Participant = {
 
 type LoginForm = {
 	email: string;
+	displayName: string;
 	password: string;
 };
 
